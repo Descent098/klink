@@ -1,0 +1,168 @@
+/*Class Definitions*/
+.bingoCell {
+    width: var(--grid-size);
+    height: var(--grid-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--font-size);
+    border: 3px solid black;
+    text-align: center;
+    background: var(--background-cell-color);
+    transition: all 0.2s;
+}
+.bingoCell.available:hover {
+    background: #ffeb3b;
+    transform: rotate(-2deg);
+    cursor:pointer;
+}
+.taken {
+    background: #141414;
+    color:#f0f0f0;
+    font-weight: bold;
+}
+.taken:hover {
+    cursor:not-allowed;
+}
+.ball{
+    width: 1.2rem;
+    height: 1.2rem;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: black;
+    border: 1px solid black;
+    font-family: 'Indie Flower',cursive;
+    text-align: center;
+    padding: 1rem;
+}
+
+
+/*ID definitions*/
+#gameButtons, button, #animationBox{
+    transition: opacity 1s ease-out;
+}
+#gameButtons{
+    opacity: 0; /*Initially hidden*/
+    width: calc(var(--grid-size) * 5.1);
+}
+#bingoBoard {
+    display: grid;
+    opacity:0;
+    grid-template-columns: repeat(5, var(--grid-size));
+    grid-template-rows: repeat(5, var(--grid-size));
+    gap: 5px;
+    padding: 20px;
+    background: var(--background-color);
+    border: 5px dashed black;
+    box-shadow: 5px 5px 0px black;
+    transition: opacity 1s ease-out;
+}
+
+#animationBox {
+    display: None;
+    top:-10%;
+    left:30%;
+    position:absolute;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    width: 40vw;
+    overflow: hidden;
+}
+#bingoBall {
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    border: 5px solid black;
+    position: absolute;
+    opacity: 0; /* Initially hidden */
+    font-family: 'Indie Flower',cursive;
+    filter: url(#handDrawn); /* Apply wavy effect */
+    text-align: center;
+}
+#challengeText{
+    text-align: center;
+    font-size:1.2rem;
+    background:black;
+    color: white;
+    border-radius:1.1rem;
+    width:100%;
+    margin: 1rem 0;
+    padding:1.1rem;
+    margin-bottom:.2rem;
+}
+#setupGame{
+    position: absolute;
+    inset:0;
+    z-index:100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-direction: column;
+}
+
+#challengeList{
+    padding:1.2rem;
+    list-style-type: "🍺";
+}
+#instructions{
+    margin: 0 auto;
+    margin-top: 20vh;
+    padding: 1.2rem;
+    line-height: 1.8;
+    text-align: center;
+    width:120ch;
+}
+#instructions h2,
+#instructions h3{
+    padding-top: 1.1rem;
+}
+#instructions button{
+    margin-top:1.1rem;
+    padding: .5rem;
+    cursor:pointer;
+}
+
+
+/*Responsive design changes*/
+@media (max-width: 800px) {
+    /*Tablet-like*/
+    :root{
+        --grid-size: 75px;
+        --font-size: 1.2rem;
+    }
+    #bingoBoard{
+        gap: 5px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 500px) {
+    /*Low DPI Phones*/
+    :root{
+        --grid-size: 50px;
+        --font-size: 1rem;
+    }
+    #bingoBoard{
+        gap: 5px;
+        padding: 10px;
+    }
+    .bingoCell{
+        width: 50px;
+        height: 50px;   
+        font-size: 1.1rem; 
+    }
+}
