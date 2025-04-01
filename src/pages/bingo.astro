@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import '../styles/bingo.css';
 ---
 <Layout>
     <div id="animationBox">
@@ -241,7 +240,7 @@ import '../styles/bingo.css';
 
     </script>
 
-<style>
+<style is:global>
     /*Class Definitions*/
     .bingoCell {
         width: var(--grid-size);
