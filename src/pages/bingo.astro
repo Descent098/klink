@@ -384,46 +384,24 @@ import Layout from '../layouts/Layout.astro';
     @media (max-width: 800px) {
         /*Tablet-like*/
         :root{
-            --grid-size: 75px;
-            --font-size: 1.2rem;
+            --grid-size: 75px !important;
+            --font-size: 1.2rem !important;
         }
         #bingoBoard{
             gap: 5px;
             padding: 15px;
         }
     }
-    
-    @media (max-width: 700px) {
-        /*Low DPI Phones*/
-        :root{
-            --grid-size: 50px;
-            --font-size: 1rem;
-        }
-        #bingoBoard{
-            gap: 5px;
-            padding: 7px;
-        }
-        .bingoCell{
-            width: 50px;
-            height: 50px;   
-            font-size: 1.1rem; 
-        }
-    }
 
-    @media (max-width: 500px) {
+    @media (max-width: 400px) {
         /*Low DPI Phones*/
         :root{
-            --grid-size: 50px;
-            --font-size: .8rem;
+            --grid-size: 50px !important;
+            --font-size: .8rem !important;
         }
         #bingoBoard{
             gap: 3px;
             padding: 3px;
-        }
-        .bingoCell{
-            width: 50px;
-            height: 50px;   
-            font-size: 1rem; 
         }
     }
     </style>
