@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/GameLayout.astro';
+---
+
+<Layout>
+	<h1><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> Games List</h1>
+	<div class="gamesList">
+		<a class="gameCard" href="/bingo">
+			<img src="/bingo-screenshot.png" alt="" width="40%">
+			<div class="gameInfo">
+				<h3>Bingo</h3>
+				<p>Classic Bingo with a twist. Complete challenges to get to the next ball, be the first to get a bingo and win a fun reward.</p>
+			</div>
+		</a>
+	</div>
+</Layout>
+
+<style is:global>
+	main{
+		justify-content: flex-start !important;
+	}
+</style>
+<style>
+	.gamesList{
+		width:70%;
+		background: #141414;
+		border-radius: 1.2rem;
+		display: flex;
+		justify-content: flex-start;
+    	align-items: center;
+		flex-direction: column;
+		padding: 1.5rem;
+		gap:20px;
+		min-height: 80vh;
+	}
+
+	.gameCard{
+		background: var(--background-color);
+		padding:1.1rem;
+		flex-basis: 80%;
+		border-radius: 1.1rem;
+		width: 80%;
+		text-decoration: none;
+		min-height:20vh;
+		display:flex;
+		flex-direction: row;
+		gap: 20px;
+		font-size:1.8rem;
+		line-height: 1.6;
+		color:black
+	}
+	.gameCard h3{
+		font-size:3rem;
+	}
+	.gameCard img{
+		object-fit: contain;
+		width:50%;
+		height:50%;
+	}
+	.gameInfo{
+		display: flex;
+		flex-direction: column;
+	}
+
+	@media (max-width:500px) {
+		.gameCard{
+			font-size: 1rem;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		.gameCard h3{
+			font-size:1.6rem;
+		}
+
+		.gameCard img{
+			width:100%;
+		}
+		
+	}
+</style>

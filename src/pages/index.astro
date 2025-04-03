@@ -1,12 +1,17 @@
 ---
-
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from '../layouts/GameLayout.astro';
 ---
 
 <Layout>
-	<h1>Welcome to 🍺 Klnk</h1>
-	<a class="btn" href="./bingo">Check out Bingo</a>
+	<h1>Welcome to <span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span></h1>
+	<div id="btnGroup">
+		<a class="btn" href="/games">Our Games</a>
+		<a class="btn secondary-btn" href="/about">About</a>
+	</div>
 </Layout>
+
+<style>
+	#btnGroup{
+		padding: 1rem;
+	}
+</style>

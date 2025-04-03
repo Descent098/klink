@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../layouts/GameLayout.astro';
 ---
 <Layout>
     <div id="animationBox">
@@ -29,11 +29,10 @@ import Layout from '../layouts/Layout.astro';
         <ul id="challengeList"></ul>
         </details>
         <button onclick="currentGame.nextBall()">Next Ball</button>
-        <hr style="margin-top:1.1rem;">
     </div>
     
     <div id="setupGame">
-        <h1>🍺Klnk Bingo🍺</h1>
+        <h1><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> Bingo</h1>
         <button id="startGame" onclick="startGame()" style="cursor:pointer;">Start game</button>
         <button class="secondary-btn" onclick="document.getElementById('instructions').showModal();body.style.overflow='hidden';">Instructions</button>
         <dialog id="instructions">
@@ -349,7 +348,7 @@ import Layout from '../layouts/Layout.astro';
     #setupGame{
         position: absolute;
         inset:0;
-        z-index:100;
+        z-index:1;
         display: flex;
         justify-content: center;
         align-items: center;
