@@ -393,7 +393,7 @@ import Layout from '../layouts/Layout.astro';
         }
     }
     
-    @media (max-width: 500px) {
+    @media (max-width: 700px) {
         /*Low DPI Phones*/
         :root{
             --grid-size: 50px;
@@ -401,12 +401,29 @@ import Layout from '../layouts/Layout.astro';
         }
         #bingoBoard{
             gap: 5px;
-            padding: 10px;
+            padding: 7px;
         }
         .bingoCell{
             width: 50px;
             height: 50px;   
             font-size: 1.1rem; 
+        }
+    }
+
+    @media (max-width: 500px) {
+        /*Low DPI Phones*/
+        :root{
+            --grid-size: 50px;
+            --font-size: .8rem;
+        }
+        #bingoBoard{
+            gap: 3px;
+            padding: 3px;
+        }
+        .bingoCell{
+            width: 50px;
+            height: 50px;   
+            font-size: 1rem; 
         }
     }
     </style>
