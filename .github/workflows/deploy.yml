@@ -32,6 +32,10 @@ jobs:
         shell: "bash"
         run: |
           npm run build
+      - name: Add Domain
+        shell: "bash"
+        run: |
+          echo "klnk.ca" > CNAME
       # - name: Install, build, and upload your site
       #   uses: withastro/action@v1
       #   with:
