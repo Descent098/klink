@@ -2,6 +2,7 @@
 import Layout from '../layouts/GameLayout.astro';
 ---
 <Layout>
+    <h1 id="mainLogoContainer" style="padding-top:20vh;"><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> Bingo</h1>
     <div id="animationBox">
         <div id="bingoBall"></div>
     
@@ -19,12 +20,10 @@ import Layout from '../layouts/GameLayout.astro';
             </defs>
         </svg>
     </div>
-    
     <div id="bingoBoard">
     </div>
-    
     <div id="gameButtons">
-        <h3 id="challengeText">Current Challenge: <span id="currentChallenge">Take a Drink</span></h3>
+        <h3 id="challengeText"><span id="currentChallenge">Take a Drink</span></h3>
         <details><summary>Previous Challenges</summary>
         <ul id="challengeList"></ul>
         </details>
@@ -32,11 +31,9 @@ import Layout from '../layouts/GameLayout.astro';
     </div>
     
     <div id="setupGame">
-        <h1><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> Bingo</h1>
         <button id="startGame" onclick="startGame()" style="cursor:pointer;">Start game</button>
         <button class="secondary-btn" onclick="document.getElementById('instructions').showModal();body.style.overflow='hidden';">Instructions</button>
         <dialog id="instructions">
-            <h2 style="text-decoration:underline">🍺Klink Bingo🍺</h2>
             <h2>Here's a description of the game</h2>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati sunt tenetur itaque aperiam maiores ad repellat repellendus placeat, veniam, animi at laudantium. Dicta quibusdam distinctio facilis labore quis voluptatibus eos.</p>
             <h3>Here's a description of the game</h3>
@@ -70,10 +67,27 @@ import Layout from '../layouts/GameLayout.astro';
          * @param {Number} number - The number of the bold
          * @param {String} challenge - The challenge to get the next ball
          */
-        constructor(letter, number, challenge) {
+        constructor(letter, number, challenge="") {
             this.letter = letter;
             this.number = number;
-            this.challenge = challenge;
+            if (challenge){
+                this.challenge = challenge;
+            }else{
+                // Generate Challenge
+                let modifier = 1 // The modifier for how much people want to drink
+                let challenges = [
+                    ["Creamy: Take <DRINK_AMOUNT> drink(s) of something creamy" , 1],
+                    ["Blue Baddie: Take <DRINK_AMOUNT> drink(s) of something blue" , 2],
+                    ["Radical Red: Take <DRINK_AMOUNT> drink(s) of something red" , 2],
+                    ["SHOTS, SHOTS, SHOTS, SHOTS, SHOTS, SHOTS: Take <DRINK_AMOUNT> shot(s)" , 1],
+                ]
+
+                const randomIndex = Math.floor(Math.random() * challenges.length);
+                const randomChallenge = challenges[randomIndex][0].replace("<DRINK_AMOUNT>", Math.floor(challenges[randomIndex][1]*modifier)); 
+
+                this.challenge = randomChallenge;
+            }
+            
             this.chosen = false;
         }
 
@@ -85,6 +99,10 @@ import Layout from '../layouts/GameLayout.astro';
          * Runs the animation for a ball being picked
          */
         runAnimation(){
+            var id = self.setTimeout(function() {}, 0);
+            while (id--) {
+                self.clearTimeout(id);
+            }
             console.log("starting animation for", this.letter, this.number)
             document.getElementById("animationBox").style.display = "flex"
             document.getElementById("animationBox").style.opacity = "1"
@@ -116,7 +134,8 @@ import Layout from '../layouts/GameLayout.astro';
             }, 3000)
             
         }
-        }
+
+    }
 
     class Game{
         constructor(BOARD_HEIGHT = 5){
@@ -130,9 +149,7 @@ import Layout from '../layouts/GameLayout.astro';
             // Generate all possible balls
             for (const letter of ["B","I","N","G","O"]){
                 for (let i=0; i < 15; i++){
-                    // TODO: generate random challenge
-                    let challenge = "drink"
-                    unusedBalls[letter].push(new Ball(letter, currentNum, challenge))
+                    unusedBalls[letter].push(new Ball(letter, currentNum))
                     currentNum++
                 }
             }
@@ -156,7 +173,13 @@ import Layout from '../layouts/GameLayout.astro';
             }
 
             // Assign balls to member variables
-            this.unusedBalls = unusedBalls
+            this.unusedBalls = [
+                ...unusedBalls["B"], 
+                ...unusedBalls["I"], 
+                ...unusedBalls["N"],
+                ...unusedBalls["G"],
+                ...unusedBalls["O"],
+            ]
             this.board = board
             this.remainingBalls = remainingBalls
 
@@ -192,13 +215,23 @@ import Layout from '../layouts/GameLayout.astro';
             document.getElementById("bingoBoard").style.opacity = "1"
         }
 
-        getRandomBall(){
-            if (this.remainingBalls.length === 0) return null; // Prevents errors if array is empty
+        getRandomBall(){            
+            //TODO: Handle empty arrays
 
-            const randomIndex = Math.floor(Math.random() * this.remainingBalls.length);
-            const randomBall = this.remainingBalls.splice(randomIndex, 1)[0]; 
+            let randomNum = Math.random()
+            if (randomNum <0.75){
+                const randomIndex = Math.floor(Math.random() * this.remainingBalls.length);
+                const randomBall = this.remainingBalls.splice(randomIndex, 1)[0]; 
+                return [randomBall, true]
+            } else{ 
+                // Womp womp
+                const randomIndex = Math.floor(Math.random() * this.unusedBalls.length);
+                const randomBall = this.unusedBalls.splice(randomIndex, 1)[0]; 
+                return [randomBall, false]
+            }
+            
 
-            return randomBall
+            
         }
 
         print(){
@@ -218,19 +251,25 @@ import Layout from '../layouts/GameLayout.astro';
 
         nextBall(){
             console.log("Getting next ball")
-            let ball = this.getRandomBall()
+            let [ball, onBoard] = this.getRandomBall()
             console.log("got next ball", ball)
             ball.runAnimation()
             ball.chosen= true
-            document.getElementById(`${ball.letter}${ball.number}`).classList.add("taken")
-            document.getElementById(`${ball.letter}${ball.number}`).classList.remove("available")
+            if (onBoard){
+                document.getElementById(`${ball.letter}${ball.number}`).classList.add("taken")
+                document.getElementById(`${ball.letter}${ball.number}`).classList.remove("available")
+            }
             document.getElementById("currentChallenge").innerHTML = ball.challenge
-            document.getElementById("challengeList").innerHTML += `<li><span class="ball">${ball.letter}${ball.number}</span>Challenge: ${ball.challenge}</li>`
+            document.getElementById("challengeList").innerHTML += `<li><span class="ball">${ball.letter}${ball.number}</span>${ball.challenge}</li>`
+            
         }
+
+        
     }
 
     function startGame(){
         document.getElementById("setupGame").style.display = "None";
+        document.getElementById("mainLogoContainer").style.paddingTop="5vh";
         currentGame = new Game()
         document.getElementById("gameButtons").style.opacity = 1;
         
@@ -240,6 +279,10 @@ import Layout from '../layouts/GameLayout.astro';
     </script>
 
 <style is:global>
+    :root{
+        --ball-size: 120px;
+        --ball-font-size: 24px;
+    }
     /*Class Definitions*/
     .bingoCell {
         width: var(--grid-size);
@@ -317,14 +360,14 @@ import Layout from '../layouts/GameLayout.astro';
         overflow: hidden;
     }
     #bingoBall {
-        width: 120px;
-        height: 120px;
+        width: var(--ball-size);
+        height: var(--ball-size);
         background: white;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 24px;
+        font-size: var(--ball-font-size);
         font-weight: bold;
         color: black;
         border: 5px solid black;
@@ -355,10 +398,18 @@ import Layout from '../layouts/GameLayout.astro';
         gap: 10px;
         flex-direction: column;
     }
+    #mainLogoContainer{
+        padding:.5rem;
+        transition: all 0.6s ease;
+    }
     
     #challengeList{
         padding:1.2rem;
-        list-style-type: "🍺";
+    }
+    #challengeList li{
+        display: flex;
+        gap: .6rem;
+        margin-bottom: .6rem;
     }
     #instructions{
         margin: 0 auto;
@@ -385,6 +436,8 @@ import Layout from '../layouts/GameLayout.astro';
         :root{
             --grid-size: 75px !important;
             --font-size: 1.2rem !important;
+            --ball-size: 80px !important;
+            --ball-font-size: 20px;
         }
         #bingoBoard{
             gap: 5px;
@@ -397,6 +450,8 @@ import Layout from '../layouts/GameLayout.astro';
         :root{
             --grid-size: 50px !important;
             --font-size: .8rem !important;
+            --ball-size: 50px !important;
+            --ball-font-size: 15px;
         }
         #bingoBoard{
             gap: 3px;

@@ -12,6 +12,35 @@ import Layout from '../layouts/GameLayout.astro';
 				<p>Classic Bingo with a twist. Complete challenges to get to the next ball, be the first to get a bingo and win a fun reward.</p>
 			</div>
 		</a>
+		<a class="gameCard" href="#">
+			<img src="/coming-soon.png" alt="" width="40%">
+			<div class="gameInfo">
+				<h3>Scavengers</h3>
+				<p>Hunt for things out in the world, each item gets you drinks. First one gets to give them out</p>
+			</div>
+		</a>
+		<a class="gameCard" href="#">
+			<img src="/coming-soon.png" alt="" width="40%">
+			<div class="gameInfo">
+				<h3>Grambling</h3>
+				<p>A series of simple games where you bet your drinks. Win and give them out, lose and have to take them</p>
+			</div>
+		</a>
+		<a class="gameCard" href="#">
+			<img src="/coming-soon.png" alt="" width="40%">
+			<div class="gameInfo">
+				<h3>Trivia</h3>
+				<p>How much do you know about what you're drinking? Right answers get you more gifts to give out. Wrong ones give you consequences</p>
+			</div>
+		</a>
+
+		<a class="gameCard" href="#">
+			<img src="/coming-soon.png" alt="" width="40%">
+			<div class="gameInfo">
+				<h3>In it to win it</h3>
+				<p>Play various bar bets to give out drinks to your friends, fail them and drink double what you bet</p>
+			</div>
+		</a>
 	</div>
 </Layout>
 
@@ -62,8 +91,48 @@ import Layout from '../layouts/GameLayout.astro';
 		flex-direction: column;
 	}
 
-	@media (max-width:500px) {
+	@media (max-width:1150px) {
+		.gamesList{
+			width:80%;
+			padding:1rem;
+		}
 		.gameCard{
+			font-size: 1rem;
+			width:90%;
+		}
+		.gameCard h3{
+			font-size:1.6rem;
+		}
+		
+	}
+
+	@media (max-width:800px) {
+		.gamesList{
+			width:100%;
+			padding:1rem;
+		}
+		.gameCard{
+			font-size: 1rem;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		.gameCard h3{
+			font-size:1.6rem;
+		}
+
+		.gameCard img{
+			width:100%;
+		}
+		
+	}
+
+	@media (max-width:600px) {
+		.gamesList{
+			width:100%;
+		}
+		.gameCard{
+			width:100%;
 			font-size: 1rem;
 			flex-direction: column;
 			justify-content: center;
