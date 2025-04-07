@@ -1,7 +1,14 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist", "src/pages/bingo.astro"],
+  "include": [
+    ".astro/types.d.ts", 
+    "**/*"
+  ],
+  "exclude": [
+    "dist", 
+    "src/pages/bingo.astro", 
+    "src/components/GameTemplate.astro"
+  ],
   "compilerOptions": {
     "checkJs": true,
     "allowJs": true

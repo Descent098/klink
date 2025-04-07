@@ -1,0 +1,47 @@
+
+<div id="gameButtons">
+    <h3 id="challengeText"><span id="currentChallenge">Take a Drink</span></h3>
+    <details><summary>Previous Challenges</summary>
+    <ul id="challengeList"></ul>
+    </details>
+</div>
+
+<div id="setupGame">
+    <button id="startGame" onclick="startGame()" style="cursor:pointer;">Start game</button>
+    <button class="secondary-btn" onclick="document.getElementById('instructions').showModal();body.style.overflow='hidden';">Instructions</button>
+    <dialog id="instructions">
+        <h2>Here's a description of the game</h2>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati sunt tenetur itaque aperiam maiores ad repellat repellendus placeat, veniam, animi at laudantium. Dicta quibusdam distinctio facilis labore quis voluptatibus eos.</p>
+        <h3>Here's a description of the game</h3>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iure, quod. Laudantium maxime voluptas error, suscipit dolores voluptatum, asperiores dolore culpa, ducimus qui officiis voluptate magni consequuntur? Necessitatibus odio veritatis ratione!</p>
+
+        <button onclick="document.getElementById('instructions').close();body.style.overflow='auto';" autofocus>Close</button>
+    </dialog>
+</div>
+
+<script is:inline>
+    //@ts-nocheck
+
+    /**
+     * The current Game instance
+     * @type {Game?}
+     */
+    let currentGame = null
+    
+
+    class Game{
+        constructor(){
+
+        }
+    }
+
+    /**
+     * Function to start the game
+     */
+    function startGame(){
+        document.getElementById("setupGame").style.display = "None";
+        document.getElementById("mainLogoContainer").style.paddingTop="5vh";
+        currentGame = new Game()
+        document.getElementById("gameButtons").style.opacity = 1;
+    }
+</script>

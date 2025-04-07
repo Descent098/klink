@@ -1,0 +1,212 @@
+---
+import Layout from '../../layouts/GameLayout.astro';
+const gameName = "Bingo"
+---
+<Layout title={gameName} onload="//@ts-nocheck">
+    <div id="animationBox">
+        <div id="bingoBall"></div>
+        <!-- SVG filter for hand-drawn effect -->
+        <svg>
+            <defs>
+                <filter id="handDrawn">
+                    <!-- Stronger noise effect -->
+                    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" result="noise"/>
+                    <!-- Increase distortion scale -->
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="5"/>
+                    <!-- Slight blur to soften the edges -->
+                    <feGaussianBlur stdDeviation="0.6"/>
+                </filter>
+            </defs>
+        </svg>
+    </div>
+    <div id="bingoBoard">
+    </div>
+    <div id="gameButtons">
+        <h3 id="challengeText"><span id="currentChallenge">Take a Drink</span></h3>
+        <details><summary>Previous Challenges</summary>
+        <ul id="challengeList"></ul>
+        </details>
+        <button onclick="currentGame.nextBall()">Next Ball</button>
+    </div>
+    
+    
+    <div slot="instructions">
+        <h2>Welcome to {gameName}</h2>
+        <p>Klnk bingo is similar to the normal bingo you're used to.</p>
+        <h3>Basic Rules</h3>
+        <p>Configure whatever settings you want, each player gets up to 2 rule vetos, and can select an intensity. Each ball will contain a letter, number and challenge. The current challenge is just beneath the board, it will look something like this:<br>
+            <div style="background:black;color: white;border-radius:1.1rem;width:100%;">Creamy: Take 1 drink(s) of something creamy</div><br>Complete the challenge you're given to be able to get your next ball, then hit the <button style="font-size: 90%;padding:0.4rem;">Next Ball</button> button</p>
+        <h3>Startup</h3>
+        <p>A random board will be generated when you start. This board contains the balls you will need to get to win.</p>
+        <img width="100%" src="/bingo/screenshot.png">
+        <h3>Winning</h3>
+        <p>Get a straight line horizontally, vertically, or diagonally to win!</p>
+        <img width="100%" src="/bingo/win-conditions.png">
+    </div>
+
+    <div slot="settings">
+        <fieldset>
+            <label for="blackout">Enable blackout mode?</label>
+            <input type="checkbox" name="blackout" id="blackout">
+        </fieldset>
+        <fieldset>
+            <label for="drinkModifier">Drink Modifier (how aggresive drink number should be)</label>
+            <select name="Drink Modifier" id="drinkModifier">
+                <option value="0.5">☺️Laid Back</option>
+                <option value="1" selected>🥳Normal</option>
+                <option value="2">🌶️Caliente</option>
+                <option value="3">🤪Derranged</option>
+            </select>
+        </fieldset>
+    </div>
+<script is:inline src="/js/gsap.min.js"></script>
+<script is:inline src="/js/games/bingo.js"></script>
+
+<style is:global>
+    :root{
+        --ball-size: 120px;
+        --ball-font-size: 24px;
+    }
+    /*Class Definitions*/
+    .bingoCell {
+        width: var(--grid-size);
+        height: var(--grid-size);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: var(--font-size);
+        border: 3px solid black;
+        text-align: center;
+        background: var(--background-cell-color);
+        transition: all 0.2s;
+    }
+    .taken {
+        background: #141414;
+        color:#f0f0f0;
+        font-weight: bold;
+    }
+    .taken:hover {
+        cursor:not-allowed;
+    }
+    .ball{
+        width: 1.2rem;
+        height: 1.2rem;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: black;
+        border: 1px solid black;
+        font-family: 'Indie Flower',cursive;
+        text-align: center;
+        padding: 1rem;
+    }
+    
+    
+    /*ID definitions*/
+    #gameButtons, button, #animationBox{
+        transition: opacity 1s ease-out;
+    }
+    #gameButtons{
+        opacity: 0; /*Initially hidden*/
+        width: calc(var(--grid-size) * 5.1);
+    }
+    #bingoBoard {
+        display: grid;
+        opacity:0;
+        grid-template-columns: repeat(5, var(--grid-size));
+        grid-template-rows: repeat(5, var(--grid-size));
+        gap: 5px;
+        padding: 20px;
+        background: var(--background-color);
+        border: 5px dashed black;
+        box-shadow: 5px 5px 0px black;
+        transition: opacity 1s ease-out;
+    }
+    
+    #animationBox {
+        display: None;
+        top:-10%;
+        left:30%;
+        position:absolute;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 40vw;
+        overflow: hidden;
+    }
+    #bingoBall {
+        width: var(--ball-size);
+        height: var(--ball-size);
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: var(--ball-font-size);
+        font-weight: bold;
+        color: black;
+        border: 5px solid black;
+        position: absolute;
+        opacity: 0; /* Initially hidden */
+        font-family: 'Indie Flower',cursive;
+        filter: url(#handDrawn); /* Apply wavy effect */
+        text-align: center;
+    }
+    #challengeText{
+        text-align: center;
+        font-size:1.2rem;
+        background:black;
+        color: white;
+        border-radius:1.1rem;
+        width:100%;
+        margin: 1rem 0;
+        padding:1.1rem;
+        margin-bottom:.2rem;
+    }
+    
+    #challengeList{
+        padding:1.2rem;
+    }
+    #challengeList li{
+        display: flex;
+        gap: .6rem;
+        margin-bottom: .6rem;
+    }
+
+    
+    
+    /*Responsive design changes*/
+    @media (max-width: 800px) {
+        /*Tablet-like*/
+        :root{
+            --grid-size: 75px !important;
+            --font-size: 1.2rem !important;
+            --ball-size: 80px !important;
+            --ball-font-size: 20px;
+        }
+        #bingoBoard{
+            gap: 5px;
+            padding: 15px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        /*Low DPI Phones*/
+        :root{
+            --grid-size: 50px !important;
+            --font-size: .8rem !important;
+            --ball-size: 50px !important;
+            --ball-font-size: 15px;
+        }
+        #bingoBoard{
+            gap: 3px;
+            padding: 3px;
+        }
+    }
+</style>
+</Layout>
+

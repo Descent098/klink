@@ -1,99 +1,102 @@
 ---
-import Footer from "../components/Footer.astro"
-import Nav from "../components/Nav.astro"
-import { ClientRouter } from "astro:transitions";
+import BaseLayout from "./BaseLayout.astro"
+
+const { title } = Astro.props;
+
 ---
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=0.9" />
-		<link rel="icon" type="image/svg+xml" href="https://klnk.ca/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Klnk</title>
-		<ClientRouter />
-		<style is:global>
-			@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
-			*{
-				box-sizing: border-box;
-				margin:0;
-				padding: 0;
-			}
-			:root{
-				--background-color:#f0f0f0;
-				--background-cell-color:#cacaca;
-				--font-size: 1.5rem;
-				--grid-size: 100px;
-			}
-			html,
-			body {
-				width: 100%;
-				min-height: 100vh;
-			}
-		
-			/*Element Definitions*/
-			main{
-				padding-top:1.3rem;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				min-height: 100vh;
-				flex-direction:column;
-				width:100%;
-			}
-		
-			body {
-				font-family: 'Indie Flower', cursive;
-				font-weight:bolder;
-				background-color: var(--background-color);
-			}
-		
-			button,
-			.btn{
-				padding:1.1rem;
-				border-radius:.8rem;;
-				background:#141414;
-				color:#f0f0f0;
-				font-family:'Indie Flower',cursive;
-				font-weight: bolder;
-				text-transform:capitalize;
-				font-size:var(--font-size);
-				cursor:pointer;
-				text-decoration: none;
-			}
-			.secondary-btn{
-				background:transparent !important;
-				color:black !important;
-			}
-		
-			details{
-				padding:1.1rem;
-				border-radius:.8rem;;
-				background:var(--background-cell-color);
-				color:black;
-				font-family:'Indie Flower',cursive;
-				font-weight: bolder;
-				text-transform:capitalize;
-				font-size:var(--font-size);
-				cursor:pointer;
-				width: 100%;
-				margin-bottom:1.2rem;
-			}
-			details[open] ul{
-				padding-left: 1.4rem;
-				margin-left: 1.4rem;
-			}
-		</style>
-	</head>
-	<body>
-		<Nav/>
-		<main>
-			<slot />
-		</main>
-		<hr style="margin: .5rem auto;width:80%;">
-		<Footer/>
-		
-	</body>
-</html>
+<BaseLayout onload="//@ts-nocheck">
+	<h1 id="mainLogoContainer" style="padding-top:20vh;"><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> { title }</h1>
+    <div id="setupGame">
+        <button id="startGame" onclick="document.getElementById('responsibleWarning').showModal()" style="cursor:pointer;">Start game</button>
+        <div class="buttonGroup">
+            <button class="secondary-btn" onclick="document.getElementById('instructions').showModal();body.style.overflow='hidden';">Instructions</button>
+            <button class="secondary-btn" onclick="document.getElementById('settings').showModal();body.style.overflow='hidden';">Settings</button>
+        </div>
+        <dialog id="responsibleWarning">
+            <h2 style="text-decoration: underline;font-size-adjust: 110%;">Warning</h2>
+			<strong>Please note that we take no accountability for what you choose to use this game for. </strong>
+            <br>
+            <strong>Please drink responsibly, and never drive after drinking!</strong>
+            <br>
+            <button class="close" onclick="document.getElementById('responsibleWarning').close();body.style.overflow='auto';startGame()">I understand</button>
+        </dialog>
+        <dialog id="instructions">
+            <h2 style="text-decoration: underline;font-size-adjust: 110%;">Instructions</h2>
+			<slot name="instructions" />
+            <button class="close" onclick="document.getElementById('instructions').close();body.style.overflow='auto';">Close</button>
+        </dialog>
+        <dialog id="settings">
+            <h2 style="text-decoration: underline;font-size-adjust: 110%;">Settings</h2>
+			<slot name="settings" />
+            <button class="close" onclick="document.getElementById('settings').close();body.style.overflow='auto';">Close</button>
+        </dialog>
+    </div>
 
+	<slot />
+</BaseLayout>
 
+<style is:global>
+	button{
+		transition: opacity 1s ease-out;
+    }
+    .buttonGroup{
+        display: flex;
+        gap:1rem;
+    }
+	#setupGame{
+        position: absolute;
+        inset:0;
+        z-index:1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-direction: column;
+    }
+    #mainLogoContainer{
+        padding:.5rem;
+        transition: all 0.6s ease;
+    }
+    #responsibleWarning{
+        margin: 10vh auto;
+        padding: 1.2rem;
+        line-height: 1.8;
+        text-align: center;
+        width:120ch;
+        border-radius:1.1rem;
+    }
+
+	#instructions,
+    #settings
+    {
+        margin: 10vh auto;
+        padding: 1.2rem;
+        line-height: 1.8;
+        text-align: center;
+        width:120ch;
+        height: 90vh;
+        border-radius:1.1rem;
+    }
+    #instructions h2,
+    #instructions h3{
+        padding-top: 1.1rem;
+    }
+    #instructions .close,
+    #settings .close,
+    #responsibleWarning .close{
+        margin-bottom:2rem;
+        padding: .5rem;
+        cursor:pointer;
+    }
+
+    #settings fieldset{
+        border:none;
+        padding:.3rem;
+    }
+
+    #settings select{
+        border-radius: 1.1rem;
+    font-family: cursive;
+    font-weight: 400;
+    }
+</style>
