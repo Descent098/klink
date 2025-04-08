@@ -6,6 +6,6 @@ export default defineConfig({
     site: "https://klnk.ca",
     prefetch: {
         prefetchAll: true,
-        defaultStrategy: 'load'
+        defaultStrategy: 'hover'
       }
 });
