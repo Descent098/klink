@@ -6,11 +6,18 @@ import Layout from '../../layouts/BaseLayout.astro';
 <Layout>
 	<h1><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> Games List</h1>
 	<div class="gamesList">
-		<a class="gameCard" href={site + "games/bingo"} data-astro-prefetch="hover">
+		<a class="gameCard" href="/games/bingo" >
 			<img src="/bingo/screenshot.png" alt="" width="40%">
-			<div class="/gameInfo">
+			<div class="gameInfo">
 				<h3>Bingo</h3>
 				<p>Classic Bingo with a twist. Complete challenges to get to the next ball, be the first to get a bingo and win a fun reward.</p>
+			</div>
+		</a>
+		<a class="gameCard" href="/games/blackjack" >
+			<img src="/blackjack/screenshot.png" alt="" width="40%">
+			<div class="gameInfo">
+				<h3>Blackjack</h3>
+				<p>Classic BlackJack with a twist. Bet on each hand, win to give out drinks, lose and have to take them!</p>
 			</div>
 		</a>
 		<a class="gameCard" href="#" data-astro-prefetch="hover">
