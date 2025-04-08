@@ -5,7 +5,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
     site: "https://klnk.ca",
     prefetch: {
-        prefetchAll: true,
-        defaultStrategy: 'hover'
+        prefetchAll: false,
+        defaultStrategy: 'viewport'
       }
 });

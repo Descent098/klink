@@ -5,7 +5,15 @@ const { title } = Astro.props;
 
 ---
 <BaseLayout onload="//@ts-nocheck">
-	<h1 id="mainLogoContainer" style="padding-top:20vh;"><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> { title }</h1>
+    <div id="endGameNotice">
+        <dialog id="endGameOutcome">
+            <h2 style="text-decoration: underline;font-size-adjust: 110%;">You win</h2>
+            <br>
+            <button class="close" onclick="document.getElementById('endGameOutcome').close();body.style.overflow='auto';startGame()">Restart Game</button>
+        </dialog>
+    </div>
+    <h1 id="mainLogoContainer"><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> { title }</h1>
+    
     <div id="setupGame">
         <button id="startGame" onclick="document.getElementById('responsibleWarning').showModal()" style="cursor:pointer;">Start game</button>
         <div class="buttonGroup">
@@ -14,7 +22,7 @@ const { title } = Astro.props;
         </div>
         <dialog id="responsibleWarning">
             <h2 style="text-decoration: underline;font-size-adjust: 110%;">Warning</h2>
-			<strong>Please note that we take no accountability for what you choose to use this game for. </strong>
+            <strong>Please note that we take no accountability for what you choose to use this game for. </strong>
             <br>
             <strong>Please drink responsibly, and never drive after drinking!</strong>
             <br>
@@ -22,12 +30,12 @@ const { title } = Astro.props;
         </dialog>
         <dialog id="instructions">
             <h2 style="text-decoration: underline;font-size-adjust: 110%;">Instructions</h2>
-			<slot name="instructions" />
+            <slot name="instructions" />
             <button class="close" onclick="document.getElementById('instructions').close();body.style.overflow='auto';">Close</button>
         </dialog>
         <dialog id="settings">
             <h2 style="text-decoration: underline;font-size-adjust: 110%;">Settings</h2>
-			<slot name="settings" />
+            <slot name="settings" />
             <button class="close" onclick="document.getElementById('settings').close();body.style.overflow='auto';">Close</button>
         </dialog>
     </div>
@@ -56,6 +64,7 @@ const { title } = Astro.props;
     #mainLogoContainer{
         padding:.5rem;
         transition: all 0.6s ease;
+        padding-top:20vh;
     }
     #responsibleWarning{
         margin: 10vh auto;
@@ -67,7 +76,8 @@ const { title } = Astro.props;
     }
 
 	#instructions,
-    #settings
+    #settings,
+    #endGameOutcome
     {
         margin: 10vh auto;
         padding: 1.2rem;
@@ -83,7 +93,8 @@ const { title } = Astro.props;
     }
     #instructions .close,
     #settings .close,
-    #responsibleWarning .close{
+    #responsibleWarning .close,
+    #endGameOutcome .close{
         margin-bottom:2rem;
         padding: .5rem;
         cursor:pointer;
@@ -96,7 +107,36 @@ const { title } = Astro.props;
 
     #settings select{
         border-radius: 1.1rem;
-    font-family: cursive;
-    font-weight: 400;
+        font-family: cursive;
+        font-weight: 400;
     }
+
+    #endGameNotice{
+        position:absolute;
+        inset:0;
+        text-align: center;
+        z-index:100;
+        display:none;
+        top: 20%;
+        left: 15%;
+        align-items: center;
+        width: 70vw;
+        padding:1rem;
+        border-radius: 1.1rem;
+        height:60vh;
+    }
+
+    #endGameOutcome{
+        height:40vh;
+        font-size:1.3rem;
+    }
+
+    @media (max-width:500px) {
+        #mainLogoContainer{
+            padding-top:15vh;
+        }
+        
+    }
+
+    
 </style>

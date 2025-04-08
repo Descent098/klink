@@ -26,7 +26,7 @@ const gameName = "Bingo"
         <details><summary>Previous Challenges</summary>
         <ul id="challengeList"></ul>
         </details>
-        <button onclick="currentGame.nextBall()">Next Ball</button>
+        <button onclick="currentGame.nextBall()" id="nextBall">Next Ball</button>
     </div>
     
     
@@ -47,11 +47,11 @@ const gameName = "Bingo"
     <div slot="settings">
         <fieldset>
             <label for="blackout">Enable blackout mode?</label>
-            <input type="checkbox" name="blackout" id="blackout">
+            <input type="checkbox" name="blackout" id="blackout" onchange="currentSettings.blackout=this.checked">
         </fieldset>
         <fieldset>
             <label for="drinkModifier">Drink Modifier (how aggresive drink number should be)</label>
-            <select name="Drink Modifier" id="drinkModifier">
+            <select name="Drink Modifier" id="drinkModifier" onchange="currentSettings.modifierName = this.options[this.selectedIndex].text;currentSettings.modifierValue = this.value;">
                 <option value="0.5">☺️Laid Back</option>
                 <option value="1" selected>🥳Normal</option>
                 <option value="2">🌶️Caliente</option>
@@ -61,6 +61,10 @@ const gameName = "Bingo"
     </div>
 <script is:inline src="/js/gsap.min.js"></script>
 <script is:inline src="/js/games/bingo.js"></script>
+<script is:inline>
+
+    currentSettings = new BingoSettings("normal", 1, false)
+</script>
 
 <style is:global>
     :root{
