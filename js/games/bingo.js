@@ -7,6 +7,14 @@
 let currentGame = null;
 
 /**
+ * The Current Game settings
+ *
+ * @type {BingoSettings?}
+*/
+ //@ts-ignore
+ let currentSettings = null;
+
+/**
  * Gets a random integer
  * @param {Number} min - The minimum value
  * @param {Number} max - The maximum value
@@ -51,15 +59,35 @@ class Challenge{
         // Generate Challenge
         let challenges = [
             ["Creamy","Take <DRINK_AMOUNT> drink(s) of something creamy" , Math.floor(1* modifier), "creamy"],
+            ["Wake up","Take <DRINK_AMOUNT> drink(s) of something with coffee or espresso" , Math.floor(1* modifier), "creamy"],
             ["Blue Baddie","Take <DRINK_AMOUNT> drink(s) of something blue" , Math.floor(2* modifier), "blue"],
+            ["Fruity","Take <DRINK_AMOUNT> drink(s) of something blue and fruity" , Math.floor(2* modifier), "blue"],
             ["Radical Red","Take <DRINK_AMOUNT> drink(s) of something red" , Math.floor(2* modifier), "red"],
+            ["Clear and dangerout","Take <DRINK_AMOUNT> drink(s) of something clear" , Math.floor(2* modifier), "clear"],
             ["SHOTS, SHOTS, SHOTS, SHOTS, SHOTS, SHOTS","Take <DRINK_AMOUNT> shot(s)" , Math.floor(1* modifier), "shot"],
+            ["Branch Out","Take <DRINK_AMOUNT> shot(s) you've never tried before" , Math.floor(1* modifier), "shot"],
         ]
 
         const randomIndex = Math.floor(Math.random() * challenges.length);
         //@ts-ignore
         const randomChallenge = new Challenge(...challenges[randomIndex])
         return randomChallenge
+    }
+}
+
+class BingoSettings{
+    /**
+     * Creates an instance of BingoSettings.
+     *
+     * @constructor
+     * @param {String} modifierName The human-readable name of the modifier
+     * @param {Number} modifierValue The modifier value to multiply drinks by
+     * @param {Boolean} blackout Whether to play with blackout mode or not
+     */
+    constructor(modifierName, modifierValue, blackout){
+        this.modifierName = modifierName
+        this.modifierValue = modifierValue 
+        this.blackout = blackout
     }
 }
 
@@ -99,12 +127,13 @@ class Ball {
      * 
      * @param {"B"|"I"|"N"|"G"|"O"} letter - The letter to use
      * @param {Number} number - The number of the ball
-     * @param {Challenge} challenge - The challenge to get the next ball
+     * @param {Challenge?} challenge - The challenge to get the next ball
+     * @param {Number} modifier - The modifier to use
      */
-    constructor(letter, number, challenge) {
+    constructor(letter, number, challenge=null, modifier=1) {
         this.letter = letter;
         this.number = number;
-        this.challenge = challenge || Challenge.randomChallenge();
+        this.challenge = challenge || Challenge.randomChallenge(modifier);
         this.chosen = false;
     }
 
@@ -175,7 +204,15 @@ class Ball {
 }
 
 class Bingo{
-    constructor(BOARD_HEIGHT = 5){
+    /**
+     * Creates an instance of Bingo.
+     *
+     * @constructor
+     * @param {BingoSettings} settings The settings for the game
+     */
+    constructor(settings){
+        this.settings = settings
+        const BOARD_HEIGHT = 5
         this.BOARD_HEIGHT = BOARD_HEIGHT
         /** @type {{ B: Ball[], I: Ball[], N:Ball[], G:Ball[], O:Ball[]}} */
         let unusedBalls = {"B":[],"I":[],"N":[],"G":[],"O":[]}
@@ -189,7 +226,7 @@ class Bingo{
         for (const letter of ["B","I","N","G","O"]){
             for (let i=0; i < 15; i++){
                 // @ts-ignore
-                unusedBalls[letter].push(new Ball(letter, currentNum))
+                unusedBalls[letter].push(new Ball(letter, currentNum, null,this.settings.modifierValue))
                 currentNum++
             }
         }
@@ -200,7 +237,7 @@ class Bingo{
                 
                 if (letter == "N" && i == FREE_SPACE_POSITION){
                     // @ts-ignore
-                    let temp = new Ball("Free", "FREE", undefined)
+                    let temp = new Ball("Free", "FREE", undefined, 0)
                     temp.chosen = true
                     board[letter].push(temp)
                     continue
@@ -262,6 +299,25 @@ class Bingo{
             
         }
         boardElement.style.opacity = "1"
+        /** @type {Array<Ball[]>} */
+        this.winConditions = [
+            // Horizontal
+            [this.board["B"][0],this.board["I"][0],this.board["N"][0],this.board["G"][0],this.board["O"][0]],
+            [this.board["B"][1],this.board["I"][1],this.board["N"][1],this.board["G"][1],this.board["O"][1]],
+            [this.board["B"][2],this.board["I"][2],this.board["N"][2],this.board["G"][2],this.board["O"][2]],
+            [this.board["B"][3],this.board["I"][3],this.board["N"][3],this.board["G"][3],this.board["O"][3]],
+            [this.board["B"][4],this.board["I"][4],this.board["N"][4],this.board["G"][4],this.board["O"][4]],
+            // Vertical
+            [this.board["B"][0],this.board["B"][1],this.board["B"][2],this.board["B"][3],this.board["B"][4]],
+            [this.board["I"][0],this.board["I"][1],this.board["I"][2],this.board["I"][3],this.board["I"][4]],
+            [this.board["N"][0],this.board["N"][1],this.board["N"][2],this.board["N"][3],this.board["N"][4]],
+            [this.board["G"][0],this.board["G"][1],this.board["G"][2],this.board["G"][3],this.board["G"][4]],
+            [this.board["O"][0],this.board["O"][1],this.board["O"][2],this.board["O"][3],this.board["O"][4]],
+            // Diagonal
+            [this.board["B"][0],this.board["I"][1],this.board["N"][2],this.board["G"][3],this.board["O"][4]],
+            [this.board["B"][4],this.board["I"][3],this.board["N"][2],this.board["G"][1],this.board["O"][0]],
+        ]
+        this.totalDrinks = 0
     }
 
     /**
@@ -309,6 +365,7 @@ class Bingo{
         let [ball, onBoard] = this.getRandomBall()
         ball.runAnimation()
         ball.chosen= true
+        this.totalDrinks += ball.challenge.drinks
         
         if (onBoard){
             // @ts-ignore
@@ -321,20 +378,76 @@ class Bingo{
         // @ts-ignore
         document.getElementById("challengeList").innerHTML += `<li><span class="ball">${ball.letter}${ball.number}</span>${ball.challenge.getText()}</li>`
         
+        // Check if won
+        if (this.checkIfWon()){
+            console.log("CHECKIGN IF WON")
+            endGame(this.totalDrinks)
+            currentGame = null
+        }
+    }
+
+    /**
+     * Checks if player has won
+     * @returns Boolean
+     */
+    checkIfWon(){
+        for (const line of this.winConditions){
+            let winner = true;
+            for (const ball of line){
+                if (!ball.chosen){
+                    winner = false;
+                    continue
+                }
+            }
+            if (winner){
+                return true;
+            }
+        }
+        return false;
     }
 
     
+}
+
+
+function endGame(drinks = 0){
+    //@ts-ignore
+    document.getElementById("endGameNotice").style.display = "block"
+    //@ts-ignore
+    document.getElementById("endGameOutcome").innerHTML = `
+        <h2 style="text-decoration: underline;font-size-adjust: 110%;">You Win!</h2>
+        <br>
+        <p>Your Total drinks: ${drinks}<br>Give ${Math.floor(drinks/2)} drink(s) out to whoever you want!</p>
+        <br>
+        <button class="close" onclick="document.getElementById('endGameOutcome').close();body.style.overflow='auto';startGame()">Restart Game</button>
+    `
+    //@ts-ignore
+    document.getElementById("endGameOutcome").showModal()
 }
 
 /**
  * The function to  start the game
  */
 function startGame(){
+    // Cleanup old game items
+
+    //@ts-ignore
+    document.getElementById("endGameNotice").style.display = "none"
+    //@ts-ignore
+    document.getElementById("challengeList").innerHTML =  ""
+    
+    // Startup new game
     //@ts-ignore
     document.getElementById("setupGame").style.display = "None";
     //@ts-ignore
     document.getElementById("mainLogoContainer").style.paddingTop="5vh";
-    currentGame = new Bingo()
+    // Build out game board HTML
+    /** @type {HTMLElement} */
+    //@ts-ignore
+    const boardElement = document.getElementById("bingoBoard")
+    boardElement.innerHTML = ""
+    //@ts-ignore
+    currentGame = new Bingo(currentSettings)
     //@ts-ignore
     document.getElementById("gameButtons").style.opacity = "1";
 }
