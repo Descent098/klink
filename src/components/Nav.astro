@@ -2,17 +2,17 @@
 const site = Astro.site!.href
 ---
 <nav>
-    <a id="navLogo" href="/" data-astro-prefetch><img src="/icon.png" alt=""></a>
+    <a id="navLogo" href="/"><img src="/icon.png" alt=""></a>
     <div></div>
     <div class="dropdown">
-        <a href={site + "games"} data-astro-prefetch>Games</a>
+        <a href="/games">Games</a>
         <!-- First Tier Drop Down -->
         <ul>
-            <li><a href={site + "games/bingo"} data-astro-prefetch="viewport">Bingo</a></li>
+            <li><a href="/games/bingo">Bingo</a></li>
         </ul>  
     </div>
           
-    <a href={site + "about"} data-astro-prefetch>About</a>
+    <a href="/about">About</a>
 </nav>
 
 <style is:global>
