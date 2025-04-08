@@ -47,7 +47,7 @@ class Challenge{
      * @returns {String}
      */
     getText(){
-        return `${this.title}: ` +this.text.replaceAll("<DRINK_AMOUNT>", this.drinks.toString())
+        return `${this.title}: ` +this.text.replaceAll("<DRINK_AMOUNT>", `<span class="drinks">${this.drinks.toString()}</span>`)
     }
 
     /**
@@ -417,7 +417,7 @@ function endGame(drinks = 0){
     document.getElementById("endGameOutcome").innerHTML = `
         <h2 style="text-decoration: underline;font-size-adjust: 110%;">You Win!</h2>
         <br>
-        <p>Your Total drinks: ${drinks}<br>Give ${Math.floor(drinks/2)} drink(s) out to whoever you want!</p>
+        <p>Your Total drinks: <span class="drinks">${drinks}</span><br>Give <span class="drinks">${Math.floor(drinks/2)}</span> drink(s) out to whoever you want!</p>
         <br>
         <button class="close" onclick="document.getElementById('endGameOutcome').close();body.style.overflow='auto';startGame()">Restart Game</button>
     `
