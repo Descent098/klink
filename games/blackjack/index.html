@@ -1,0 +1,346 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=0.9"><link rel="icon" type="image/svg+xml" href="https://klnk.ca/favicon.svg"><meta name="generator" content="Astro v5.5.6"><title>Klnk</title><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.B8VJlpzi.js"></script><style>.playingCard{font-size:8rem;font-family:sans-serif;font-weight:100}#dealerCards,#currentCards{display:flex;flex-direction:column;font-size:2rem}#dealerCards span,#currentCards span{font-size:5rem}
+button{transition:opacity 1s ease-out}.buttonGroup{display:flex;gap:1rem}.drinks{font-family:cursive,sans-serif}#gameContent{display:none;opacity:0;padding-top:15vh;transition:opacity 2s ease-in-out}#setupGame{position:absolute;inset:0;z-index:1;display:flex;justify-content:center;align-items:center;gap:10px;flex-direction:column}#mainLogoContainer{padding:.5rem;transition:all .6s ease;position:absolute;top:30vh}#responsibleWarning{margin:10vh auto;padding:1.2rem;line-height:1.8;text-align:center;width:120ch;border-radius:1.1rem}#instructions,#settings,#endGameOutcome{margin:10vh auto;padding:1.2rem;line-height:1.8;text-align:center;width:120ch;height:90vh;border-radius:1.1rem}#instructions h2,#instructions h3{padding-top:1.1rem}#instructions .close,#settings .close,#responsibleWarning .close,#endGameOutcome .close{margin-bottom:2rem;padding:.5rem;cursor:pointer}#settings fieldset{border:none;padding:.3rem}#settings select{border-radius:1.1rem;font-family:cursive;font-weight:400}#endGameNotice{position:absolute;text-align:center;z-index:100;display:none;inset:20% 0 0 15%;align-items:center;width:70vw;padding:1rem;border-radius:1.1rem;height:60vh}#endGameOutcome{height:40vh;font-size:1.3rem}@media (max-width:500px){#mainLogoContainer{top:15vh}}
+footer[data-astro-cid-sz7xmlte]{width:80%;margin:.8rem auto;display:grid;grid-template-columns:1fr 6fr 1fr;grid-template-rows:repeat(2,1fr);grid-column-gap:5px;grid-row-gap:15px;justify-content:center;align-items:center;padding:2rem;font-family:Indie Flower,cursive;font-weight:bolder}footer[data-astro-cid-sz7xmlte] [data-astro-cid-sz7xmlte]{text-align:center}nav{word-wrap:break-word!important;position:sticky;inset:0;height:7vh;width:100%;background-color:var(--background-color);display:grid;grid-template-columns:2fr 6fr repeat(2,1fr);grid-template-rows:1fr;grid-column-gap:5px;grid-row-gap:0px;filter:drop-shadow(5px 5px 10px #0000001d);border-bottom-left-radius:.8rem;font-weight:bolder;border-bottom-right-radius:.8rem;padding:.2rem;align-items:center;z-index:150;font-family:Indie Flower,cursive}nav a,nav .dropdown{text-decoration:none;padding:.5rem;font-size:1.3rem;justify-content:center;text-align:center}nav ul{margin-top:1.1rem;list-style:none;position:relative}nav ul li{display:inline-block}@media (min-width: 1200px){nav .dropdown:after{content:" +"}}nav .dropdown ul{display:none;position:absolute;top:4vh}nav .dropdown:hover>ul{display:inherit}nav .dropdown li{width:100px;float:none;display:list-item;position:relative;background:var(--background-cell-color);border-radius:.5rem;padding:.3rem;margin-left:.3rem}#navLogo{width:10%;height:6vh}#navLogo img{width:50px;height:50px;padding:.4rem}.astro-route-announcer{position:absolute;left:0;top:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap;width:1px;height:1px}@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media (prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+@import"https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap";*{box-sizing:border-box;margin:0;padding:0}:root{--background-color:#f0f0f0;--background-cell-color:#cacaca;--font-size: 1.5rem;--grid-size: 100px}html,body{width:100%;min-height:100vh}main{padding-top:1.3rem;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column;width:100%}body{font-family:Indie Flower,cursive;font-weight:bolder;background-color:var(--background-color)}button,.btn{padding:1.1rem;border-radius:.8rem;background:#141414;color:#f0f0f0;font-family:Indie Flower,cursive;font-weight:bolder;text-transform:capitalize;font-size:var(--font-size);cursor:pointer;text-decoration:none}.secondary-btn{background:transparent!important;color:#000!important}details{padding:1.1rem;border-radius:.8rem;background:var(--background-cell-color);color:#000;font-family:Indie Flower,cursive;font-weight:bolder;text-transform:capitalize;font-size:var(--font-size);cursor:pointer;width:100%;margin-bottom:1.2rem}details[open] ul{padding-left:1.4rem;margin-left:1.4rem}
+</style><style>[data-astro-transition-scope="astro-46uktw2d-1"] { view-transition-name: inlineLogo; }@layer astro { ::view-transition-old(inlineLogo) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(inlineLogo) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(inlineLogo) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(inlineLogo) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-46uktw2d-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-46uktw2d-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-46uktw2d-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-46uktw2d-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-46uktw2d-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-46uktw2d-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-46uktw2d-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-46uktw2d-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body> <nav> <a id="navLogo" href="/"><img src="/icon.png" alt=""></a> <div></div> <div class="dropdown"> <a href="/games">Games</a> <!-- First Tier Drop Down --> <ul> <li><a href="/games/bingo">Bingo</a></li> <li><a href="/games/blackjack">Blackjack</a></li> </ul> </div> <a href="/about">About</a> </nav>  <main>  <div id="endGameNotice"> <dialog id="endGameOutcome"> <h2 style="text-decoration: underline;font-size-adjust: 110%;">You win</h2> <br> <button class="close" onclick="document.getElementById('endGameOutcome').close();body.style.overflow='auto';startGame()">Restart Game</button> </dialog> </div> <h1 id="mainLogoContainer"><span id="inlineLogo" data-astro-transition-scope="astro-46uktw2d-1"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> Blackjack</h1> <div id="gameContent">  <div id="dealerCards"></div> <div id="currentCards"></div> <div id="bet">
+Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)
+</div> <div style="display:flex"> <button id="stayButton" onclick="document.getElementById('subtractFromBet').style.display='none';document.getElementById('addToBet').style.display='none';document.getElementById('hitMeButton').style.display='none';currentGame.playerDone();">
+Stay
+</button> <button id="hitMeButton" onclick="document.getElementById('subtractFromBet').style.display='none';document.getElementById('addToBet').style.display='none';currentGame.player.hit(currentGame.deck);document.getElementById('currentCards').innerHTML = currentGame.player.html()">
+Hit me
+</button> <button style="display:none" id="newRound" onclick="currentGame.newRound()">
+New Round
+</button> </div> <div id="winnings"></div>   <script>
+
+/**@type {BlackJack?} */
+let currentGame = null
+
+class BlackJack{
+    constructor(){
+        this.deck = new Deck()
+        this.player = new Player("Player", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
+        this.dealer = new Player("Dealer", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
+        this.bet = 1;
+        this.owedDrinks = 0
+        this.rewardDrinks = 0
+        this.roundDone = false
+    }
+
+    playerDone(){
+        // number is raw total
+        console.log(this.roundDone)
+        if (this.roundDone){
+            console.log("Round already done")
+            return
+        }
+        if (this.player.bust){
+            console.log("dealer wins")
+            console.log(1, this.owedDrinks, this.bet)
+            this.owedDrinks += this.bet
+            this.roundDone = true
+            //@ts-ignore
+            document.getElementById("newRound").style.display = "block"
+            //@ts-ignore
+            document.getElementById("stayButton").style.display = "none"
+            return
+
+        }else{
+            while (this.dealer.value < this.player.value){
+                this.dealer.hit(this.deck)
+                //@ts-ignore
+                document.getElementById("dealerCards").innerHTML = this.dealer.html()
+            }
+            if (this.roundDone){
+                console.log("Round already done")
+                return
+            }
+            if (this.dealer.bust){
+                console.log(2, this.rewardDrinks, this.bet)
+                this.rewardDrinks += this.bet
+                console.log("Player wins")
+                this.roundDone = true
+                //@ts-ignore
+                document.getElementById("newRound").style.display = "block"
+                //@ts-ignore
+                document.getElementById("stayButton").style.display = "none"
+            } else{
+                console.log(3, this.owedDrinks, this.bet)
+                this.owedDrinks += this.bet
+                if (this.dealer.value == this.player.value){
+                    console.log("tie goes to dealer")
+                } else{
+                    console.log("dealer wins")
+                }
+                this.roundDone = true
+                //@ts-ignore
+                document.getElementById("newRound").style.display = "block"
+                //@ts-ignore
+                document.getElementById("stayButton").style.display = "none"
+                //@ts-ignore
+                document.getElementById("hitMeButton").style.display = "none"
+            }
+        }
+        
+        
+    }
+
+    newRound(){
+        //@ts-ignore
+        document.getElementById("newRound").style.display = "none"
+        
+        if (this.deck.cards.length < 10){
+            console.log("Less than 10 cards left, recreating deck")
+            this.deck = new Deck()
+        }
+        
+        this.player = new Player("Player", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
+        this.dealer = new Player("Dealer", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
+        this.bet = 1;
+        this.roundDone = false;
+        //@ts-ignore
+        document.getElementById("winnings").innerHTML = `
+            <p>Owed Drinks: <span class="drinks">${this.owedDrinks}</span></p>
+            <br> 
+            <p>Reward Drinks: <span class="drinks">${this.rewardDrinks}</span></p>
+        `
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)`
+        //@ts-ignore
+        document.getElementById("stayButton").style.display = "block"
+        //@ts-ignore
+        document.getElementById("hitMeButton").style.display = "block"
+        //@ts-ignore
+        document.getElementById("dealerCards").innerHTML = currentGame.dealer.html()
+        //@ts-ignore
+        document.getElementById("currentCards").innerHTML = currentGame.player.html()
+
+    }
+}
+class Player{
+    /**
+     * Initializes a new Player instance
+     * @param name {String} The name of the player
+     * @param startingHand {Card[]} The hand the player starts with
+     */
+    constructor(name, startingHand){
+        this.name = name
+        this.hand = startingHand
+        this.number = this.hand[0].number + this.hand[1].number
+        this.value = this.hand[0].value + this.hand[1].value
+        this.bust = false
+    }
+
+    /**
+     * Lets the player add a card to their hand
+     * @param currentDeck {Deck} - The current Deck
+     */
+    hit(currentDeck){
+        const card = currentDeck.getRandomCard(true)
+        this.hand.push(card)
+        this.value = this.value + card.value
+        this.number = this.number + card.number
+        if (this.value > 21){
+            this.bust = true
+            //@ts-ignore
+            document.getElementById("hitMeButton").style.display='none';
+            //@ts-ignore
+            if (!currentGame.roundDone){
+                //@ts-ignore
+                currentGame.playerDone()
+            }
+            
+        }
+    }
+
+    html(){
+        let cards = this.hand.reduce(
+            (/**@type {String}*/accumulator, /**@type {Card}*/card) => accumulator + card.html,
+            "",
+          );
+        return `${this.name}'s Hand: <div class="cards">${cards}</div> <div class="details">Total <span class="drinks" style="font-size:2rem;"> ${this.value} </span></div>`
+    }
+}
+class Card{
+
+    /**@type {"♠" | "♥" | "♦" | "♣"} */
+    suit = "♠";
+
+    /**
+     * Instantiates a new Card
+     * @param letter {String} - A="♠", B="♥", C="♦", D="♣"
+     * @param number {Number} - The number for the card
+     */
+    constructor (letter, number){
+        let color = "black"
+        switch (letter){
+            case "A":
+                this.suit = "♠"
+                break;
+            case "B":
+                this.suit = "♥"
+                color = "red"
+                break;
+            case "C":
+                this.suit = "♦"
+                color = "red"
+                break;
+            case "D":
+                this.suit = "♣"
+                break;
+        }        
+
+        let characterNumber = number.toString()
+        if (number>9){
+
+            if (number >11){
+                characterNumber = (number+1).toString(16).toUpperCase()
+            } else{
+                characterNumber = number.toString(16).toUpperCase()
+            }
+        }
+
+        /**
+         * @type {String}
+         * The character representation of the card
+         */
+        this.character = `&#x1F0${letter}${characterNumber};`    
+
+        /**
+         * @type {String}
+         * The html representation of the card
+         */
+        this.html = `<span class="playingCard" style="color:${color}">&#x1F0${letter}${characterNumber};</span>`    
+        
+        /**
+         * @type {Number}
+         * The number representation of the card (goes above 11)
+         */
+        this.number = number
+
+        if (number > 10){
+            this.value = 10
+        } else if (number == 1){
+            this.value = 11
+        } else{
+            this.value = number
+        }
+        
+        
+    }
+
+
+
+}
+
+class Deck{
+    constructor (){
+        /**@type {Card[]} */
+        let cards = []
+        /** 
+         * @type {{ "♠": Card[], "♥": Card[], "♦": Card[], "♣": Card[] }}
+         */
+        let deck = {
+            "♠":[],
+            "♥":[],
+            "♦":[],
+            "♣":[]
+        }
+        for (const letter of ["A","B","C","D"]){
+            for (let i=1;i<=13; i++){
+                cards.push(new Card(letter, i))
+            }
+        }
+        for (const card of cards){
+            deck[card.suit].push(card)
+        }
+        this.cards = cards
+        this.deck = deck
+        this.remaining = cards.length
+
+    }
+
+    /**
+     * Get's a random card from the deck
+     * @param remove Whether to remove the card from the deck or not
+     * @returns {Card}
+     */
+    getRandomCard(remove=false){
+        if (this.cards.length){
+            const cardIndex = Math.floor(Math.random()*this.cards.length)
+            const card = this.cards[cardIndex]
+            if (remove){
+                this.deck[card.suit].splice(this.deck[card.suit].indexOf(card), 1)
+                this.cards.splice(cardIndex, 1)
+            }
+            this.remaining = this.cards.length
+            return card
+        } else {
+            throw new Error("No Cards remaining")
+        }
+        
+    }
+}
+
+function startGame(){
+
+    currentGame = new BlackJack()
+    // Cleanup old game items
+    //@ts-ignore
+    document.getElementById("endGameNotice").style.display = "none"
+    
+    // Startup new game
+    //@ts-ignore
+    document.getElementById("setupGame").style.display = "none";
+    //@ts-ignore
+    document.getElementById("gameContent").style.display = "block";
+    //@ts-ignore
+    document.getElementById("gameContent").style.opacity = "1";
+    //@ts-ignore
+    document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)`
+    //@ts-ignore   
+    document.getElementById("dealerCards").innerHTML = currentGame.dealer.html()
+    //@ts-ignore
+    document.getElementById("currentCards").innerHTML = currentGame.player.html()
+    //@ts-ignore
+    document.getElementById("mainLogoContainer").style.top = "15vh"; 
+
+}
+
+
+</script>   </div> <div id="setupGame"> <button id="startGame" onclick="document.getElementById('responsibleWarning').showModal()" style="cursor:pointer;">Start game</button> <div class="buttonGroup"> <button class="secondary-btn" onclick="document.getElementById('instructions').showModal();body.style.overflow='hidden';">Instructions</button> <button class="secondary-btn" onclick="document.getElementById('settings').showModal();body.style.overflow='hidden';">Settings</button> </div> <dialog id="responsibleWarning"> <h2 style="text-decoration: underline;font-size-adjust: 110%;">Warning</h2> <strong>Please note that we take no accountability for what you choose to use this game for. </strong> <br> <strong>Please drink responsibly, and never drive after drinking!</strong> <br> <button class="close" onclick="document.getElementById('responsibleWarning').close();body.style.overflow='auto';startGame()">I understand</button> </dialog> <dialog id="instructions"> <h2 style="text-decoration: underline;font-size-adjust: 110%;">Instructions</h2> <div> <h2>Welcome to Blackjack</h2> <p></p> <h3>Basic Rules</h3> <p></p> <h3>Startup</h3> <p></p> <h3>Winning</h3> <p></p> </div> <button class="close" onclick="document.getElementById('instructions').close();body.style.overflow='auto';">Close</button> </dialog> <dialog id="settings"> <h2 style="text-decoration: underline;font-size-adjust: 110%;">Settings</h2> <div> <p>No additional settings for this game!</p> </div> <button class="close" onclick="document.getElementById('settings').close();body.style.overflow='auto';">Close</button> </dialog> </div>  </main> <hr style="margin: .5rem auto;width:80%;"> <footer data-astro-cid-sz7xmlte> <ul data-astro-cid-sz7xmlte> <a href="https://github.com/descent098/klnk" data-astro-cid-sz7xmlte>Source</a> </ul> <div data-astro-cid-sz7xmlte>Please Drink Responsibly</div> <ul data-astro-cid-sz7xmlte> <a href="/tos" data-astro-cid-sz7xmlte>Terms of Service</a> </ul> <div class="spacer" data-astro-cid-sz7xmlte></div> <ul data-astro-cid-sz7xmlte> <a href="/about" data-astro-cid-sz7xmlte>About</a> </ul> <div class="spacer" data-astro-cid-sz7xmlte></div> </footer>  </body></html> 

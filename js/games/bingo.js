@@ -440,7 +440,9 @@ function startGame(){
     //@ts-ignore
     document.getElementById("setupGame").style.display = "None";
     //@ts-ignore
-    document.getElementById("mainLogoContainer").style.paddingTop="5vh";
+    document.getElementById("gameContent").style.display = "block";
+    //@ts-ignore
+    document.getElementById("mainLogoContainer").style.top="10vh";
     // Build out game board HTML
     /** @type {HTMLElement} */
     //@ts-ignore
@@ -448,6 +450,8 @@ function startGame(){
     boardElement.innerHTML = ""
     //@ts-ignore
     currentGame = new Bingo(currentSettings)
+    //@ts-ignore
+    document.getElementById("gameContent").style.opacity = "1";
     //@ts-ignore
     document.getElementById("gameButtons").style.opacity = "1";
 }
