@@ -1,4 +1,6 @@
-
+---
+const site = Astro.site!.href
+---
 <footer>
     <ul>
         <a href="https://github.com/descent098/klnk">Source</a>
@@ -6,7 +8,7 @@
     <div>Please Drink Responsibly</div>
     
     <ul>
-        <a href="/tos" data-astro-prefetch="load">Terms of Service</a>
+        <a  href={site + "tos"} data-astro-prefetch="load">Terms of Service</a>
     </ul>
     <div class="spacer"></div>
     <ul>
