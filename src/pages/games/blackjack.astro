@@ -1,0 +1,362 @@
+---
+import Layout from '../../layouts/GameLayout.astro';
+const gameName = "Blackjack"
+---
+<Layout title={gameName} onload="//@ts-nocheck">
+    <div id="dealerCards">
+
+    </div>
+    <div id="currentCards">
+    </div>
+
+    <div id="bet">
+        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)
+    </div>
+    <div style="display:flex">
+        <button id="stayButton" onclick="document.getElementById('subtractFromBet').style.display='none';document.getElementById('addToBet').style.display='none';document.getElementById('hitMeButton').style.display='none';currentGame.playerDone();">
+            Stay
+        </button>
+        <button id="hitMeButton" onclick="document.getElementById('subtractFromBet').style.display='none';document.getElementById('addToBet').style.display='none';currentGame.player.hit(currentGame.deck);document.getElementById('currentCards').innerHTML = currentGame.player.html()">
+            Hit me
+        </button>
+        <button style="display:none" id="newRound" onclick="currentGame.newRound()">
+            New Round
+        </button>
+    </div>
+
+    <div id="winnings">
+
+    </div>
+
+    <div slot="instructions">
+        <h2>Welcome to {gameName}</h2>
+        <p></p>
+        <h3>Basic Rules</h3>
+        <p></p>
+        <h3>Startup</h3>
+        <p></p>
+        <h3>Winning</h3>
+        <p></p>
+    </div>
+
+    <div slot="settings">
+        <p>No additional settings for this game!</p>
+    </div>
+
+<script is:inline>
+
+/**@type {BlackJack?} */
+let currentGame = null
+
+class BlackJack{
+    constructor(){
+        this.deck = new Deck()
+        this.player = new Player("Player", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
+        this.dealer = new Player("Dealer", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
+        this.bet = 1;
+        this.owedDrinks = 0
+        this.rewardDrinks = 0
+        this.roundDone = false
+    }
+
+    playerDone(){
+        // number is raw total
+        console.log(this.roundDone)
+        if (this.roundDone){
+            console.log("Round already done")
+            return
+        }
+        if (this.player.bust){
+            console.log("dealer wins")
+            console.log(1, this.owedDrinks, this.bet)
+            this.owedDrinks += this.bet
+            this.roundDone = true
+            //@ts-ignore
+            document.getElementById("newRound").style.display = "block"
+            //@ts-ignore
+            document.getElementById("stayButton").style.display = "none"
+            return
+
+        }else{
+            while (this.dealer.value < this.player.value){
+                this.dealer.hit(this.deck)
+                //@ts-ignore
+                document.getElementById("dealerCards").innerHTML = this.dealer.html()
+            }
+            if (this.roundDone){
+                console.log("Round already done")
+                return
+            }
+            if (this.dealer.bust){
+                console.log(2, this.rewardDrinks, this.bet)
+                this.rewardDrinks += this.bet
+                console.log("Player wins")
+                this.roundDone = true
+                //@ts-ignore
+                document.getElementById("newRound").style.display = "block"
+                //@ts-ignore
+                document.getElementById("stayButton").style.display = "none"
+            } else{
+                console.log(3, this.owedDrinks, this.bet)
+                this.owedDrinks += this.bet
+                if (this.dealer.value == this.player.value){
+                    console.log("tie goes to dealer")
+                } else{
+                    console.log("dealer wins")
+                }
+                this.roundDone = true
+                //@ts-ignore
+                document.getElementById("newRound").style.display = "block"
+                //@ts-ignore
+                document.getElementById("stayButton").style.display = "none"
+                //@ts-ignore
+                document.getElementById("hitMeButton").style.display = "none"
+            }
+        }
+        
+        
+    }
+
+    newRound(){
+        //@ts-ignore
+        document.getElementById("newRound").style.display = "none"
+        
+        if (this.deck.cards.length < 10){
+            console.log("Less than 10 cards left, recreating deck")
+            this.deck = new Deck()
+        }
+        
+        this.player = new Player("Player", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
+        this.dealer = new Player("Dealer", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
+        this.bet = 1;
+        this.roundDone = false;
+        //@ts-ignore
+        document.getElementById("winnings").innerHTML = `
+            <p>Owed Drinks: <span class="drinks">${this.owedDrinks}</span></p>
+            <br> 
+            <p>Reward Drinks: <span class="drinks">${this.rewardDrinks}</span></p>
+        `
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)`
+        //@ts-ignore
+        document.getElementById("stayButton").style.display = "block"
+        //@ts-ignore
+        document.getElementById("hitMeButton").style.display = "block"
+        //@ts-ignore
+        document.getElementById("dealerCards").innerHTML = currentGame.dealer.html()
+        //@ts-ignore
+        document.getElementById("currentCards").innerHTML = currentGame.player.html()
+
+    }
+}
+class Player{
+    /**
+     * Initializes a new Player instance
+     * @param name {String} The name of the player
+     * @param startingHand {Card[]} The hand the player starts with
+     */
+    constructor(name, startingHand){
+        this.name = name
+        this.hand = startingHand
+        this.number = this.hand[0].number + this.hand[1].number
+        this.value = this.hand[0].value + this.hand[1].value
+        this.bust = false
+    }
+
+    /**
+     * Lets the player add a card to their hand
+     * @param currentDeck {Deck} - The current Deck
+     */
+    hit(currentDeck){
+        const card = currentDeck.getRandomCard(true)
+        this.hand.push(card)
+        this.value = this.value + card.value
+        this.number = this.number + card.number
+        if (this.value > 21){
+            this.bust = true
+            //@ts-ignore
+            document.getElementById("hitMeButton").style.display='none';
+            //@ts-ignore
+            if (!currentGame.roundDone){
+                //@ts-ignore
+                currentGame.playerDone()
+            }
+            
+        }
+    }
+
+    html(){
+        let cards = this.hand.reduce(
+            (/**@type {String}*/accumulator, /**@type {Card}*/card) => accumulator + card.html,
+            "",
+          );
+        return `${this.name}'s Hand: <div class="cards">${cards}</div> <div class="details">Total <span class="drinks" style="font-size:2rem;"> ${this.value} </span></div>`
+    }
+}
+class Card{
+
+    /**@type {"♠" | "♥" | "♦" | "♣"} */
+    suit = "♠";
+
+    /**
+     * Instantiates a new Card
+     * @param letter {String} - A="♠", B="♥", C="♦", D="♣"
+     * @param number {Number} - The number for the card
+     */
+    constructor (letter, number){
+        let color = "black"
+        switch (letter){
+            case "A":
+                this.suit = "♠"
+                break;
+            case "B":
+                this.suit = "♥"
+                color = "red"
+                break;
+            case "C":
+                this.suit = "♦"
+                color = "red"
+                break;
+            case "D":
+                this.suit = "♣"
+                break;
+        }        
+
+        let characterNumber = number.toString()
+        if (number>9){
+
+            if (number >11){
+                characterNumber = (number+1).toString(16).toUpperCase()
+            } else{
+                characterNumber = number.toString(16).toUpperCase()
+            }
+        }
+
+        /**
+         * @type {String}
+         * The character representation of the card
+         */
+        this.character = `&#x1F0${letter}${characterNumber};`    
+
+        /**
+         * @type {String}
+         * The html representation of the card
+         */
+        this.html = `<span class="playingCard" style="color:${color}">&#x1F0${letter}${characterNumber};</span>`    
+        
+        /**
+         * @type {Number}
+         * The number representation of the card (goes above 11)
+         */
+        this.number = number
+
+        if (number > 10){
+            this.value = 10
+        } else if (number == 1){
+            this.value = 11
+        } else{
+            this.value = number
+        }
+        
+        
+    }
+
+
+
+}
+
+class Deck{
+    constructor (){
+        /**@type {Card[]} */
+        let cards = []
+        /** 
+         * @type {{ "♠": Card[], "♥": Card[], "♦": Card[], "♣": Card[] }}
+         */
+        let deck = {
+            "♠":[],
+            "♥":[],
+            "♦":[],
+            "♣":[]
+        }
+        for (const letter of ["A","B","C","D"]){
+            for (let i=1;i<=13; i++){
+                cards.push(new Card(letter, i))
+            }
+        }
+        for (const card of cards){
+            deck[card.suit].push(card)
+        }
+        this.cards = cards
+        this.deck = deck
+        this.remaining = cards.length
+
+    }
+
+    /**
+     * Get's a random card from the deck
+     * @param remove Whether to remove the card from the deck or not
+     * @returns {Card}
+     */
+    getRandomCard(remove=false){
+        if (this.cards.length){
+            const cardIndex = Math.floor(Math.random()*this.cards.length)
+            const card = this.cards[cardIndex]
+            if (remove){
+                this.deck[card.suit].splice(this.deck[card.suit].indexOf(card), 1)
+                this.cards.splice(cardIndex, 1)
+            }
+            this.remaining = this.cards.length
+            return card
+        } else {
+            throw new Error("No Cards remaining")
+        }
+        
+    }
+}
+
+function startGame(){
+
+    currentGame = new BlackJack()
+    // Cleanup old game items
+    //@ts-ignore
+    document.getElementById("endGameNotice").style.display = "none"
+    
+    // Startup new game
+    //@ts-ignore
+    document.getElementById("setupGame").style.display = "none";
+    //@ts-ignore
+    document.getElementById("gameContent").style.display = "block";
+    //@ts-ignore
+    document.getElementById("gameContent").style.opacity = "1";
+    //@ts-ignore
+    document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)`
+    //@ts-ignore   
+    document.getElementById("dealerCards").innerHTML = currentGame.dealer.html()
+    //@ts-ignore
+    document.getElementById("currentCards").innerHTML = currentGame.player.html()
+    //@ts-ignore
+    document.getElementById("mainLogoContainer").style.top = "15vh"; 
+
+}
+
+
+</script>
+
+    <style is:global>
+        .playingCard{
+            font-size: 8rem;
+            font-family: sans-serif;
+            font-weight: 100;
+        }
+        #dealerCards,
+        #currentCards{
+            display: flex;
+            flex-direction: column;
+            font-size: 2rem;
+        }
+        #dealerCards span,
+        #currentCards span{
+            font-size:5rem;
+        }
+    </style>
+</Layout>
