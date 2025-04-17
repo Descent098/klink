@@ -30,13 +30,22 @@ const gameName = "Blackjack"
 
     <div slot="instructions">
         <h2>Welcome to {gameName}</h2>
-        <p></p>
+        <p>The quintessential card game, with a fun twist</p>
         <h3>Basic Rules</h3>
-        <p></p>
+        <p>The aim of the game on each round is to get as close to 21 as you can, without going over. You can choose to hit (get another card) or stay (end the round).
+            <br>Throughout you will be given reward and owed drinks. Reward drinks are drinks you get to give out to others, owed drinks are drinks you take.
+            <br>Ties will always go to the dealer
+            <br>There is no end to the rounds, you just play until you're done playing!
+        </p>
+        <hr>
         <h3>Startup</h3>
-        <p></p>
+        <p>At the start of the round, your hand, and the dealers will be shown to you. You can then add to your bet (up to 10 drinks). <strong>You can only bet before your first hit!</strong></p>
+        <img src="/blackjack/screenshot-2.png" alt="">
+        <hr>
         <h3>Winning</h3>
-        <p></p>
+        <p>At the end of the round your hand and the Dealer's hand will be compared. If you have a higher value than the dealer, or the dealer busts (goes over 21) you win, otherwise you lose (ties go to dealer).
+        
+            <br>The number of drinks you bet will be added to your reward drinks (drinks you give out), if you lose they will be added to your owed drinks. You can choose when you want to stop playing, and then give out and take your drinks as you choose!</p>
     </div>
 
     <div slot="settings">
@@ -78,7 +87,7 @@ class BlackJack{
             return
 
         }else{
-            while (this.dealer.value < this.player.value){
+            while (this.dealer.number < this.player.number){
                 this.dealer.hit(this.deck)
                 //@ts-ignore
                 document.getElementById("dealerCards").innerHTML = this.dealer.html()
@@ -88,7 +97,6 @@ class BlackJack{
                 return
             }
             if (this.dealer.bust){
-                console.log(2, this.rewardDrinks, this.bet)
                 this.rewardDrinks += this.bet
                 console.log("Player wins")
                 this.roundDone = true
@@ -97,7 +105,6 @@ class BlackJack{
                 //@ts-ignore
                 document.getElementById("stayButton").style.display = "none"
             } else{
-                console.log(3, this.owedDrinks, this.bet)
                 this.owedDrinks += this.bet
                 if (this.dealer.value == this.player.value){
                     console.log("tie goes to dealer")
@@ -113,6 +120,12 @@ class BlackJack{
                 document.getElementById("hitMeButton").style.display = "none"
             }
         }
+        //@ts-ignore
+        document.getElementById("winnings").innerHTML = `
+            <p>Owed Drinks (Drinks you take): <span class="drinks">${this.owedDrinks}</span></p>
+            <br> 
+            <p>Reward Drinks (Drinks you give out): <span class="drinks">${this.rewardDrinks}</span></p>
+        `
         
         
     }
@@ -132,9 +145,9 @@ class BlackJack{
         this.roundDone = false;
         //@ts-ignore
         document.getElementById("winnings").innerHTML = `
-            <p>Owed Drinks: <span class="drinks">${this.owedDrinks}</span></p>
+            <p>Owed Drinks (Drinks you take): <span class="drinks">${this.owedDrinks}</span></p>
             <br> 
-            <p>Reward Drinks: <span class="drinks">${this.rewardDrinks}</span></p>
+            <p>Reward Drinks (Drinks you give out): <span class="drinks">${this.rewardDrinks}</span></p>
         `
         //@ts-ignore
         document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)`
@@ -353,6 +366,10 @@ function startGame(){
             display: flex;
             flex-direction: column;
             font-size: 2rem;
+        }
+        #dealerCards{
+            color:red;
+            border-bottom: 1px solid black;
         }
         #dealerCards span,
         #currentCards span{
