@@ -1,0 +1,193 @@
+---
+import Layout from '../../layouts/GameLayout.astro';
+const gameName = "Fifteen"
+---
+<Layout title={gameName} onload="//@ts-nocheck">
+
+    <div id="opDice"></div>
+    <div id="dice">
+
+    </div>
+    <div id="diceTotal">
+
+    </div>
+    <div id="totalBet">
+
+    </div>
+    <div id="bet">
+        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet <span 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)
+    </div>
+
+    <div id="controls">
+        <button onclick="currentGame.roll()">Roll Dice</button>
+    </div>
+
+    <div slot="instructions">
+        <h2>Welcome to {gameName}</h2>
+        <p>A simple dice game, get as close to the goal number as possible without going over!</p>
+        <h3>Basic Rules</h3>
+        <p>On each turn you will be able to place a bet, then roll a dice. Continue rolling until you get as close to the goal number (<span class="drinks">15</span> by default) as you can, without going over
+            <br>After you choose to stop rolling, an opponent will roll to try to beat your number (ties go to the opponent), if they do, you drink, if you win, give out your bet drinks
+        </p>
+    </div>
+    <div slot="settings">
+    </div>
+
+
+
+    <script src="/js/dice.js" is:inline></script>
+    <script is:inline>
+
+    /**@type {Fifteen?} */
+    let currentGame = null
+
+    class Fifteen{
+        constructor (goalNumber = 15){
+            const firstDice = Dice.getRandomDice()
+            /**@type {Dice[]} */
+            this.dice = [firstDice]
+            this.currentBet = 1
+            this.totalBet = 0
+            this.roundDone = false
+            this.total = firstDice.number
+            this.goalNumber = goalNumber
+
+            // Setup UI
+            //@ts-ignore
+            document.getElementById("dice").innerHTML = firstDice.html
+            //@ts-ignore
+            document.getElementById("diceTotal").innerHTML = `Total: <span class="drinks">${this.total}</span>`
+            //@ts-ignore
+            document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button>`
+        }
+
+        roll(){
+            const newDice = Dice.getRandomDice()
+            
+            this.dice.push(newDice)
+            this.total += newDice.number
+            const betMultiplier = Math.max(this.dice.length -  2, 1)
+
+            this.totalBet += this.currentBet * betMultiplier
+
+
+            //@ts-ignore
+            document.getElementById("dice").innerHTML += newDice.html
+            //@ts-ignore
+            document.getElementById("diceTotal").innerHTML = `Total: <span class="drinks">${this.total}</span>`
+            //@ts-ignore
+            document.getElementById("bet").innerHTML = `Your bet this round is (<span class="drinks">${betMultiplier}</span>x multiplier): <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+            //@ts-ignore
+            document.getElementById("totalBet").innerHTML = `<h3>Current Total Bet: <span class="drinks">${this.totalBet}</span></h3>`
+            
+            this.currentBet = 1
+
+            if (this.total > this.goalNumber){
+                // Lost game
+                this.endGame(false)
+                return
+            }
+
+            console.log("HERE")
+            //@ts-ignore
+            document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button><button onclick="currentGame.finished()">Stop Rolling</button>`
+
+        }
+
+        /**
+         * 
+         * @param won {Boolean} If the player won or not
+         */
+        endGame(won){
+            if (won){
+                //@ts-ignore
+                document.getElementById("bet").innerHTML = `Give out: <span class="drinks">${this.totalBet}</span> drink(s)`
+            } else{
+                //@ts-ignore
+                document.getElementById("bet").innerHTML = `Take: <span class="drinks">${this.totalBet}</span> drink(s)`
+                
+            }
+            
+            // Reset Variables
+            this.totalBet = 0
+            this.currentBet = 1
+            this.dice = []
+            this.roundDone = true
+
+            // Clean up UI
+            
+            //@ts-ignore
+            document.getElementById("diceTotal").innerHTML = ``
+            //@ts-ignore
+            document.getElementById("totalBet").innerHTML = ``
+            //@ts-ignore
+            document.getElementById("controls").innerHTML = `<button onclick="startGame()">New Game</button>`
+        }
+
+        /**
+         * Function that gets called when the player is done rolling
+         */
+        finished(){
+            const opFirstDie = Dice.getRandomDice()
+            let opDice = [opFirstDie]
+            let opTotal = opFirstDie.number
+            //@ts-ignore
+            document.getElementById("opDice").innerHTML = `Opponent Dice: ${opFirstDie.html}`
+            //@ts-ignore
+            document.getElementById("dice").innerHTML = "Your Dice: " + document.getElementById("dice").innerHTML
+            while (opTotal < this.total){
+                const die = Dice.getRandomDice()
+                opDice.push(die)
+                //@ts-ignore
+                document.getElementById("opDice").innerHTML += die.html
+                opTotal += die.number
+            }
+
+            if (opTotal > this.goalNumber){
+                // Player won
+                this.endGame(true)
+            } else{
+                // Player lost
+                this.endGame(false)
+            }
+
+            
+
+        }
+    }
+
+    function startGame(){
+
+        currentGame = new Fifteen()
+        // Cleanup old game items
+        //@ts-ignore
+        document.getElementById("endGameNotice").style.display = "none"
+        //@ts-ignore
+        document.getElementById("totalBet").innerHTML = ""
+        //@ts-ignore
+        document.getElementById("opDice").innerHTML = ""
+
+        // Startup new game
+        //@ts-ignore
+        document.getElementById("setupGame").style.display = "none";
+        //@ts-ignore
+        document.getElementById("gameContent").style.display = "block";
+        //@ts-ignore
+        document.getElementById("gameContent").style.opacity = "1";
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = `Your current bet is (<span class="drinks">1</span>x multiplier): <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        //@ts-ignore
+        document.getElementById("mainLogoContainer").style.top = "15vh"; 
+
+
+    }
+    </script>
+
+    <style is:inline>
+        .dice{
+            font-size:4rem;
+            font-family: sans-serif;
+            font-weight:400;
+        }
+    </style>
+</Layout>
