@@ -12,6 +12,9 @@ const gameName = "Blackjack"
     <div id="bet">
         Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)
     </div>
+    <div id="winnings">
+
+    </div>
     <div style="display:flex">
         <button id="stayButton" onclick="document.getElementById('subtractFromBet').style.display='none';document.getElementById('addToBet').style.display='none';document.getElementById('hitMeButton').style.display='none';currentGame.playerDone();">
             Stay
@@ -24,16 +27,13 @@ const gameName = "Blackjack"
         </button>
     </div>
 
-    <div id="winnings">
-
-    </div>
+    
 
     <div slot="instructions">
         <h2>Welcome to {gameName}</h2>
         <p>The quintessential card game, with a fun twist</p>
         <h3>Basic Rules</h3>
         <p>The aim of the game on each round is to get as close to 21 as you can, without going over. You can choose to hit (get another card) or stay (end the round).
-            <br>Throughout you will be given reward and owed drinks. Reward drinks are drinks you get to give out to others, owed drinks are drinks you take.
             <br>Ties will always go to the dealer
             <br>There is no end to the rounds, you just play until you're done playing!
         </p>
@@ -43,28 +43,36 @@ const gameName = "Blackjack"
         <img src="/blackjack/screenshot-2.png" alt="">
         <hr>
         <h3>Winning</h3>
-        <p>At the end of the round your hand and the Dealer's hand will be compared. If you have a higher value than the dealer, or the dealer busts (goes over 21) you win, otherwise you lose (ties go to dealer).
+        <p>At the end of the round your hand and the Dealer's hand will be compared. If you have a higher total than the dealer, or the dealer busts (goes over 21) you win, otherwise you lose (ties go to dealer).
         
-            <br>The number of drinks you bet will be added to your reward drinks (drinks you give out), if you lose they will be added to your owed drinks. You can choose when you want to stop playing, and then give out and take your drinks as you choose!</p>
+            <br>You can choose when you want to stop playing, and then give out/take your drinks as you choose!</p>
     </div>
 
     <div slot="settings">
-        <p>No additional settings for this game!</p>
+        <fieldset>
+            <label for="acesHigh">Ace value</label>
+            <select name="acesHigh" id="acesHigh" onchange="if (this.value==='1'){acesHigh = true}else{acesHigh = false}">
+                <option value="0">Aces low (1)</option>
+                <option value="1" selected>Aces High (11)</option>
+            </select>
+        </fieldset>
     </div>
+
+<script src="/js/cards.js" is:inline></script>
 
 <script is:inline>
 
 /**@type {BlackJack?} */
 let currentGame = null
 
+let acesHigh = true
+
 class BlackJack{
     constructor(){
-        this.deck = new Deck()
+        this.deck = new Deck(acesHigh)
         this.player = new Player("Player", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
         this.dealer = new Player("Dealer", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
         this.bet = 1;
-        this.owedDrinks = 0
-        this.rewardDrinks = 0
         this.roundDone = false
     }
 
@@ -77,27 +85,30 @@ class BlackJack{
         }
         if (this.player.bust){
             console.log("dealer wins")
-            console.log(1, this.owedDrinks, this.bet)
-            this.owedDrinks += this.bet
             this.roundDone = true
+            //@ts-ignore
+            document.getElementById("winnings").innerHTML = `<h2>Take <span class="drinks">${this.bet}</span> Drinks</h2>`
             //@ts-ignore
             document.getElementById("newRound").style.display = "block"
             //@ts-ignore
             document.getElementById("stayButton").style.display = "none"
+            //@ts-ignore
+            document.getElementById("bet").innerHTML = ""
             return
 
         }else{
+            if (this.roundDone){
+                console.log("Round already done")
+                return
+            }
             while (this.dealer.number < this.player.number){
                 this.dealer.hit(this.deck)
                 //@ts-ignore
                 document.getElementById("dealerCards").innerHTML = this.dealer.html()
             }
-            if (this.roundDone){
-                console.log("Round already done")
-                return
-            }
             if (this.dealer.bust){
-                this.rewardDrinks += this.bet
+                //@ts-ignore
+                document.getElementById("winnings").innerHTML = `<h2>Give out <span class="drinks">${this.bet}</span> Drinks</h2>`
                 console.log("Player wins")
                 this.roundDone = true
                 //@ts-ignore
@@ -105,7 +116,8 @@ class BlackJack{
                 //@ts-ignore
                 document.getElementById("stayButton").style.display = "none"
             } else{
-                this.owedDrinks += this.bet
+                //@ts-ignore
+                document.getElementById("winnings").innerHTML = `<h2>Take <span class="drinks">${this.bet}</span> Drinks</h2>`
                 if (this.dealer.value == this.player.value){
                     console.log("tie goes to dealer")
                 } else{
@@ -119,14 +131,9 @@ class BlackJack{
                 //@ts-ignore
                 document.getElementById("hitMeButton").style.display = "none"
             }
-        }
+        }     
         //@ts-ignore
-        document.getElementById("winnings").innerHTML = `
-            <p>Owed Drinks (Drinks you take): <span class="drinks">${this.owedDrinks}</span></p>
-            <br> 
-            <p>Reward Drinks (Drinks you give out): <span class="drinks">${this.rewardDrinks}</span></p>
-        `
-        
+        document.getElementById("bet").innerHTML = ""
         
     }
 
@@ -144,11 +151,7 @@ class BlackJack{
         this.bet = 1;
         this.roundDone = false;
         //@ts-ignore
-        document.getElementById("winnings").innerHTML = `
-            <p>Owed Drinks (Drinks you take): <span class="drinks">${this.owedDrinks}</span></p>
-            <br> 
-            <p>Reward Drinks (Drinks you give out): <span class="drinks">${this.rewardDrinks}</span></p>
-        `
+        document.getElementById("winnings").innerHTML = ""
         //@ts-ignore
         document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)`
         //@ts-ignore
@@ -203,127 +206,7 @@ class Player{
             (/**@type {String}*/accumulator, /**@type {Card}*/card) => accumulator + card.html,
             "",
           );
-        return `${this.name}'s Hand: <div class="cards">${cards}</div> <div class="details">Total <span class="drinks" style="font-size:2rem;"> ${this.value} </span></div>`
-    }
-}
-class Card{
-
-    /**@type {"♠" | "♥" | "♦" | "♣"} */
-    suit = "♠";
-
-    /**
-     * Instantiates a new Card
-     * @param letter {String} - A="♠", B="♥", C="♦", D="♣"
-     * @param number {Number} - The number for the card
-     */
-    constructor (letter, number){
-        let color = "black"
-        switch (letter){
-            case "A":
-                this.suit = "♠"
-                break;
-            case "B":
-                this.suit = "♥"
-                color = "red"
-                break;
-            case "C":
-                this.suit = "♦"
-                color = "red"
-                break;
-            case "D":
-                this.suit = "♣"
-                break;
-        }        
-
-        let characterNumber = number.toString()
-        if (number>9){
-
-            if (number >11){
-                characterNumber = (number+1).toString(16).toUpperCase()
-            } else{
-                characterNumber = number.toString(16).toUpperCase()
-            }
-        }
-
-        /**
-         * @type {String}
-         * The character representation of the card
-         */
-        this.character = `&#x1F0${letter}${characterNumber};`    
-
-        /**
-         * @type {String}
-         * The html representation of the card
-         */
-        this.html = `<span class="playingCard" style="color:${color}">&#x1F0${letter}${characterNumber};</span>`    
-        
-        /**
-         * @type {Number}
-         * The number representation of the card (goes above 11)
-         */
-        this.number = number
-
-        if (number > 10){
-            this.value = 10
-        } else if (number == 1){
-            this.value = 11
-        } else{
-            this.value = number
-        }
-        
-        
-    }
-
-
-
-}
-
-class Deck{
-    constructor (){
-        /**@type {Card[]} */
-        let cards = []
-        /** 
-         * @type {{ "♠": Card[], "♥": Card[], "♦": Card[], "♣": Card[] }}
-         */
-        let deck = {
-            "♠":[],
-            "♥":[],
-            "♦":[],
-            "♣":[]
-        }
-        for (const letter of ["A","B","C","D"]){
-            for (let i=1;i<=13; i++){
-                cards.push(new Card(letter, i))
-            }
-        }
-        for (const card of cards){
-            deck[card.suit].push(card)
-        }
-        this.cards = cards
-        this.deck = deck
-        this.remaining = cards.length
-
-    }
-
-    /**
-     * Get's a random card from the deck
-     * @param remove Whether to remove the card from the deck or not
-     * @returns {Card}
-     */
-    getRandomCard(remove=false){
-        if (this.cards.length){
-            const cardIndex = Math.floor(Math.random()*this.cards.length)
-            const card = this.cards[cardIndex]
-            if (remove){
-                this.deck[card.suit].splice(this.deck[card.suit].indexOf(card), 1)
-                this.cards.splice(cardIndex, 1)
-            }
-            this.remaining = this.cards.length
-            return card
-        } else {
-            throw new Error("No Cards remaining")
-        }
-        
+        return `${this.name}'s Hand: <div class="cards">${cards}</div> <div class="details">Total <span class="drinks" style="font-size:2rem;"> ${this.number} </span></div>`
     }
 }
 
@@ -351,8 +234,6 @@ function startGame(){
     document.getElementById("mainLogoContainer").style.top = "15vh"; 
 
 }
-
-
 </script>
 
     <style is:global>
@@ -366,10 +247,10 @@ function startGame(){
             display: flex;
             flex-direction: column;
             font-size: 2rem;
+            border-bottom: 1px solid black;
         }
         #dealerCards{
             color:red;
-            border-bottom: 1px solid black;
         }
         #dealerCards span,
         #currentCards span{

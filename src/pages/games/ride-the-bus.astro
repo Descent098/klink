@@ -1,0 +1,343 @@
+---
+import Layout from '../../layouts/GameLayout.astro';
+const gameName = "Ride The Bus"
+
+---
+<Layout title={gameName} onload="//@ts-nocheck">
+    <div id="currentCards">
+    </div>
+
+    
+    <div id="bet">
+        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)
+    </div>
+    <h2 id="roundInfo">The card color will be?</h2>
+    <div id="controls">
+        <button style="background:rgba(202, 14, 14, 0.889);" onclick="currentGame.firstRound('red')">
+            Red
+        </button>
+        <button onclick="currentGame.firstRound('black')">
+            Black
+        </button>
+    </div>
+
+    <div id="winnings">
+
+    </div>
+
+    <div slot="instructions">
+        <h2>Welcome to {gameName}</h2>
+        <p>A game of chance and risk, play 4 games of chance and win (or lose) big</p>
+        <h3>Basic Rules</h3>
+        <p>There will be 4 rounds you need to play through, red-black, higher/lower, in-between/outside, and suits. 
+            <br>
+            <br>Red/Black<span style="font-family:sans-serif">:</span> Guess if the first card will be red or black
+            <br>Higher/Lower<span style="font-family:sans-serif">:</span> GUess if the next card is higher/lower number than the current card
+            <br>In-between/Outside<span style="font-family:sans-serif">:</span> Guess if the next card's number is in-between the last two, or outside the range of them
+            <br>Suits<span style="font-family:sans-serif">:</span> Guess the next card's suit
+        </p>
+        <hr>
+        <h3>Winning</h3>
+        <p>Correctly choose for all 4 rounds and win!
+        
+            <br>You can choose when you want to stop playing, and then give out and take your drinks as you choose!</p>
+    </div>
+
+    <div slot="settings">
+        <fieldset>
+            <label for="acesHigh">Ace value</label>
+            <select name="acesHigh" id="acesHigh" onchange="if (this.value==='1'){acesHigh = true}else{acesHigh = false}">
+                <option value="0">Aces low (1)</option>
+                <option value="1" selected>Aces High (11)</option>
+            </select>
+        </fieldset>
+    </div>
+
+<script src="/js/cards.js" is:inline></script>
+
+<script is:inline>
+
+/**@type {RideTheBus?} */
+let currentGame = null
+
+let acesHigh = true
+
+
+class RideTheBus{
+    constructor(){
+        this.deck = new Deck(acesHigh)
+        this.totalBet = 0;
+        this.currentBet = 1;
+        this.owedDrinks = 0
+        this.rewardDrinks = 0
+        this.roundDone = false
+        this.firstCard = this.deck.getRandomCard(true)
+        this.secondCard = this.deck.getRandomCard(true)
+        this.thirdCard = this.deck.getRandomCard(true)
+        this.fourthCard = this.deck.getRandomCard(true)
+    }
+
+    /**
+     * Ends the round
+     * @param won {Boolean} - If the player won or not
+     */
+    endGame(won){
+        this.totalBet += this.currentBet
+        if (won){
+            //@ts-ignore
+            document.getElementById("winnings").innerHTML = `
+                <h2>Give out: <span class="drinks">${Math.floor(this.totalBet*1.25)}</span> drinks</h2>
+            `
+            //@ts-ignore
+            document.getElementById("roundInfo").innerHTML = "You win!"
+        } else {
+            //@ts-ignore
+            document.getElementById("winnings").innerHTML = `
+                <h2>Take: <span class="drinks">${this.totalBet}</span> drinks</h2>
+            `
+            //@ts-ignore
+            document.getElementById("roundInfo").innerHTML = "You Lose"
+        }
+        // Reset bet
+        this.currentBet = 1
+        this.totalBet = 0
+        this.roundDone = true
+
+        //@ts-ignore
+        document.getElementById("controls").innerHTML = `
+                <button onclick="startGame()">
+                    New Round
+                </button>
+            `
+        //@ts-ignore
+        document.getElementById("bet").innerHTML =""
+    }
+
+    /**
+     * Function to end the first round (red/black guess)
+     * @param guess {"black" | "red"} - The Guess the player has for the first round
+     */
+    firstRound(guess){
+        
+
+        
+        if (((this.firstCard.suit === "♠" || this.firstCard.suit === "♣") && guess==="black") || ((this.firstCard.suit === "♥" || this.firstCard.suit === "♦") && guess==="red")){
+            console.log("You win the round")
+            this.totalBet += this.currentBet
+            //@ts-ignore
+            document.getElementById("controls").innerHTML = `
+                <button style="background:#f0f0f0; color:#141414;" onclick="currentGame.secondRound('higher')">
+                    Higher
+                </button>
+                <button onclick="currentGame.secondRound('lower')">
+                    Lower
+                </button>
+            `
+            //@ts-ignore
+            document.getElementById("roundInfo").innerHTML = "The next card's value will be?"
+        } else{ 
+            // Lost
+            console.log("You lose")
+            //@ts-ignore
+            document.getElementById("currentCards").innerHTML = this.firstCard.html
+            this.endGame(false)
+            return
+            
+        }
+        
+
+        //@ts-ignore
+        document.getElementById("currentCards").innerHTML = this.firstCard.html
+        this.currentBet = 1;
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        
+    }
+
+    /**
+     * Function to end the second round (higher/lower guess)
+     * @param guess {"higher" | "lower"} - The Guess the player has for the first round
+     */
+     secondRound(guess){
+        
+        /*@ts-ignore*/
+        if ((guess==="higher" && (this.secondCard.value > this.firstCard.value)) || (guess==="lower" && (this.secondCard.value < this.firstCard.value))){
+            console.log("You win the round")
+            this.totalBet += this.currentBet
+            //@ts-ignore
+            document.getElementById("controls").innerHTML = `
+                <button style="background:#f0f0f0; color:#141414;" onclick="currentGame.thirdRound('inbetween')">
+                    In-Between
+                </button>
+                <button onclick="currentGame.thirdRound('outside')">
+                    Outside
+                </button>
+            `
+            //@ts-ignore
+            document.getElementById("roundInfo").innerHTML = "The next card's value compared to the last two will be?"
+        }  else{
+            console.log("You lose")
+            //@ts-ignore
+            document.getElementById("currentCards").innerHTML = this.secondCard.html
+            this.endGame(false)
+            return
+        }
+
+        //@ts-ignore
+        document.getElementById("currentCards").innerHTML = `${this.firstCard.html} ${this.secondCard.html}`
+        this.currentBet = 1;
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+     }
+
+     /**
+     * Function to end the third round (in-between/outside guess)
+     * @param guess {"inbetween" | "outside"} - The Guess the player has for the round
+     */
+     thirdRound(guess){
+        let largerCard = 0
+        let smallerCard = 0
+        // Sort cards in order
+        if (this.firstCard.value > this.secondCard.value){
+            largerCard = this.firstCard.value
+            smallerCard = this.secondCard.value
+        } else{
+            largerCard = this.secondCard.value
+            smallerCard = this.firstCard.value
+        }
+
+        const currentCardValue = this.thirdCard.value
+        
+        
+
+        /*@ts-ignore*/
+        if ((guess==="inbetween" && ((largerCard > currentCardValue) && (currentCardValue> smallerCard))) || (guess==="outside" && ((largerCard < currentCardValue) || (currentCardValue < smallerCard)))){
+            this.totalBet += this.currentBet
+            //@ts-ignore
+            document.getElementById("controls").innerHTML = `
+                <button onclick="currentGame.lastRound('♠')">
+                    ♠
+                </button>
+                <button style="background:red; color:#f0f0f0;" onclick="currentGame.lastRound('♥')">
+                    ♥
+                </button>
+                <button onclick="currentGame.lastRound('♣')">
+                    ♣
+                </button>
+                <button style="background:red; color:#f0f0f0;" onclick="currentGame.lastRound('♦')">
+                    ♦
+                </button>
+            `
+            //@ts-ignore
+            document.getElementById("roundInfo").innerHTML = "The next card's suit will be?"
+        }  else{
+            console.log("You lose")
+            //@ts-ignore
+            document.getElementById("currentCards").innerHTML = this.thirdCard.html
+            this.endGame(false)
+            return
+        }
+        this.currentBet = 1;
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        //@ts-ignore
+        document.getElementById("currentCards").innerHTML = this.thirdCard.html
+
+    }
+
+    /**
+     * Function to end the game (Which suit guess)
+     * @param guess {"♠"|"♥"|"♦"|"♣"} - The Guess the player has for the round
+     */
+     lastRound(guess){
+        this.currentBet = 1;
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = ''
+        //@ts-ignore
+        document.getElementById("currentCards").innerHTML = this.fourthCard.html
+
+        if (guess === this.fourthCard.suit){
+            console.log("You Win")
+            this.endGame(true)
+        }  else{
+            console.log("You lose")
+            this.endGame(false)
+            return
+        }
+    }
+
+
+}
+
+function startGame(){
+
+    currentGame = new RideTheBus()
+    // Cleanup old game items
+    //@ts-ignore
+    document.getElementById("endGameNotice").style.display = "none"
+    
+    //@ts-ignore
+    document.getElementById("winnings").innerHTML = "";
+    //@ts-ignore
+    document.getElementById("setupGame").style.display = "none";
+    //@ts-ignore
+    document.getElementById("gameContent").style.display = "block";
+    //@ts-ignore
+    document.getElementById("gameContent").style.opacity = "1";
+    //@ts-ignore
+    document.getElementById("gameContent").style.paddingTop = "0";
+    //@ts-ignore
+    document.getElementById("roundInfo").innerHTML = ""
+    
+    // Startup new game
+
+    //@ts-ignore
+    document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+    //@ts-ignore
+    document.getElementById("currentCards").innerHTML = ""
+    //@ts-ignore
+    document.getElementById("mainLogoContainer").style.top = "15vh"; 
+
+    //@ts-ignore
+    document.getElementById("roundInfo").innerHTML = "The card color will be?"
+
+    //@ts-ignore
+    document.getElementById("controls").innerHTML = `
+    <button style="background:rgba(202, 14, 14, 0.889);" onclick="currentGame.firstRound('red')">
+            Red
+        </button>
+        <button onclick="currentGame.firstRound('black')">
+            Black
+        </button>`
+
+
+}
+
+
+</script>
+
+    <style is:global>
+        .playingCard{
+            font-size: 8rem;
+            font-family: sans-serif;
+            font-weight: 100;
+        }
+        #currentCards{
+            display: flex;
+            flex-direction: row;
+            font-size: 4rem;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+        #currentCards span{
+            font-size:8rem;
+        }
+        #controls{
+            display:flex; 
+            justify-content:center;
+            align-content:center;
+            gap:1rem;
+        }
+    </style>
+</Layout>
