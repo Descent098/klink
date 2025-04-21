@@ -1,6 +1,6 @@
 ---
 
-import Layout from '../layouts/SimpleLayout.astro';
+import Layout from '../layouts/BaseLayout.astro';
 
 ---
 
@@ -104,7 +104,7 @@ import Layout from '../layouts/SimpleLayout.astro';
     
 </Layout>
 
-<style>
+<style is:global>
     #inlineLogo{
         font-family:'Indie Flower',cursive;
     }
@@ -112,8 +112,23 @@ import Layout from '../layouts/SimpleLayout.astro';
         padding: 1.2rem;
         line-height:1.6;
         text-wrap: balance;
+        max-width:160ch;
     }
     ul{
         padding:1rem;
+    }
+
+    main{
+        width: auto;
+        padding: 1.3rem 1rem;
+    }
+
+    p, h1, h2, h3,
+    h4, h5, h6, ul{
+        font-family: 'Times New Roman', Times, serif;
+    }
+
+    p{
+        font-size: large;
     }
 </style>
