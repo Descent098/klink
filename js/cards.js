@@ -30,8 +30,8 @@ class Card{
         this.character = `&#x1F0${letter}${characterNumber};` // UTF-8 Character 
         this.html = `<span class="playingCard" style="color:${color}">&#x1F0${letter}${characterNumber};</span>`    
 
-        if(value == 1  && acesHigh){
-            this.value = 14
+        if((value == 1) && acesHigh){
+            value = 14
         }
         
         this.value = value // The raw value (i.e. queen > jack since queen is higher value)
@@ -75,6 +75,7 @@ class Deck{
         this.cards = cards            // The cards in the deck in an unordered array
         this.deck = deck              // The cards in the deck, by suit
         this.remaining = cards.length // Number of cards remaining
+        this.acesHigh = acesHigh
     }
 
     /** Gets a random card, if remove is True will remove it from this.remaining*/

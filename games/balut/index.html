@@ -245,6 +245,8 @@ Your current bet is: <button id="subtractFromBet" style="display:inline;font-siz
         document.getElementById("opDice").innerHTML = ""
         //@ts-ignore
         document.getElementById("dice").innerHTML = ""
+        //@ts-ignore
+        document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button>`
     }
     </script> <style>
         .dice{
