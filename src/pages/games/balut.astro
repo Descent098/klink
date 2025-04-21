@@ -1,0 +1,264 @@
+---
+import Layout from '../../layouts/GameLayout.astro';
+const gameName = "Balut"
+
+---
+
+<Layout title={gameName} onload="//@ts-nocheck">
+    <div id="opDice">
+
+    </div>
+    <div id="dice">
+
+    </div>
+    <div id="rollTotal">
+
+    </div>
+
+    <div id="totalBet">
+
+    </div>
+
+    <div id="bet">
+        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)
+    </div>
+
+    <div id="controls">
+        <button onclick="currentGame.roll()">Roll Dice</button>
+    </div>
+
+
+    <div slot="instructions">
+        <h2>Welcome to {gameName}</h2>
+        <p>Balut is a simple dice game, if you win a round, give out drinks, lose and take them!</p>
+        <h3>Basic Rules</h3>
+        <p>Each round you get up to 3 re-rolls. Re-rolls replace all dice, and you have to decide which roll you think will be the highest. Once you use 3 re-rolls, or decide to keep your roll an opponent will roll, and whoever has highest score wins.</p>
+        <h3>Scoring</h3>
+        <p>The score is calculated as the highest of the below options:</p>
+        <ul style="list-style: none;">
+            <li><em>Straight</em> - Scores 50 points for a five consecutive dice sequence (<span class="dice" style="font-size:2rem;">⚁</span> <span class="dice" style="font-size:2rem;">⚂</span> <span class="dice" style="font-size:2rem;">⚃</span> <span class="dice" style="font-size:2rem;">⚄</span> <span class="dice" style="font-size:2rem;">⚅</span> or <span class="dice" style="font-size:2rem;">⚀</span> <span class="dice" style="font-size:2rem;">⚁</span> <span class="dice" style="font-size:2rem;">⚂</span> <span class="dice" style="font-size:2rem;">⚃</span> <span class="dice" style="font-size:2rem;">⚄</span>) </li>
+            <li><em>Balut</em> - Five of a kind - Scores 30 points</li>
+            <li><em>House</em> - One triple plus one pair - scores sum of all five dice.</li>
+            <li><em>Choice</em> - If you get none of the above, you get points only for <span class="dice" style="font-size:2rem;">⚃</span>, <span class="dice" style="font-size:2rem;">⚄</span><span class="dice" style="font-size:2rem;">⚅</span> </li>
+        </ul>
+    </div>
+
+    <div slot="settings">
+        <p>No additional settings for this game</p>
+    </div>
+
+    <script src="/js/dice.js" is:inline></script>
+
+    <script is:inline>
+
+    /**@type {Balut?} */
+    let currentGame = null
+
+    class Balut{
+        constructor(){
+            this.rollsLeft = 3
+            this.totalBet = 1
+            this.currentBet = 1
+            /**@type{Dice[]}*/
+            this.dice = []
+            this.score = 0
+        }
+
+        roll(){
+            this.rollsLeft -= 1
+            this.totalBet += this.currentBet
+            this.currentBet = 1
+
+            /**@type {[Dice, Dice, Dice, Dice, Dice]} */
+            let newDice = [Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice()]
+            newDice.sort((cur,next) => cur.number-next.number)
+            this.dice = newDice
+
+            this.score = this.calculateScore(newDice)
+            if (!this.rollsLeft){
+                this.finished()
+                return
+            }
+            
+            //@ts-ignore
+            document.getElementById("dice").innerHTML = `${this.dice[0].html} ${this.dice[1].html} ${this.dice[2].html} ${this.dice[3].html} ${this.dice[4].html}`
+            //@ts-ignore
+            document.getElementById("rollTotal").innerHTML = `Your roll is worth <span class="drinks">${this.score}<span>`
+            //@ts-ignore
+            document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+            //@ts-ignore
+            document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button> <button onclick="currentGame.finished()">Stick with roll</button>`
+            //@ts-ignore
+            document.getElementById("totalBet").innerHTML = `Your current total bet is: <span class="drinks">${this.totalBet}</span>`
+            
+        }
+
+        /**
+         * Calculate the score of a roll
+         * @param dice {[Dice, Dice, Dice, Dice, Dice]}
+         */
+        calculateScore(dice){
+            dice.sort((cur,next) => cur.number-next.number)
+            
+            let isStraight = (
+                (dice[0].number == 1) &&
+                (dice[1].number == 2) &&
+                (dice[2].number == 3) &&
+                (dice[3].number == 4) &&
+                (dice[4].number == 5) 
+            ) || (
+                (dice[0].number == 2) &&
+                (dice[1].number == 3) &&
+                (dice[2].number == 4) &&
+                (dice[3].number == 5) &&
+                (dice[4].number == 6) 
+            )
+
+            if (isStraight){
+                return 50
+            }
+
+            let isBalut =
+                (dice[0].number === dice[1].number) &&
+                (dice[1].number === dice[2].number) &&
+                (dice[2].number === dice[3].number) &&
+                (dice[3].number === dice[4].number) 
+
+            if (isBalut){
+                return 30
+            }
+
+
+            let isHouse = (
+                // 2 pair and 3
+                (dice[0].number === dice[1].number) &&
+                ((dice[2].number === dice[3].number) && (dice[3].number === dice[4].number))
+            ) || (
+                // 3 pair and 2
+                ((dice[0].number === dice[1].number) && (dice[1].number === dice[2].number)) &&
+                (dice[3].number === dice[4].number)
+            )
+
+            if (isHouse){
+                return dice.reduce(
+                (accumulator, currentDice) => accumulator + currentDice.number,
+                0,
+                );
+            }
+
+            // Was not a Straight, Balut, or House, so tally number of 4-6's as score
+            let numFours = 0
+            let numFives = 0
+            let numSixes = 0
+
+            for (const die of dice){
+                switch (die.number){
+                    case 4:
+                        numFours++
+                        break;
+                    case 5:
+                        numFives++
+                        break;
+                    case 6:
+                        numSixes++
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return (numFours*4)+(numFives*5)+(numSixes*6)
+
+        }
+
+        finished(){
+
+            /**@type Array<[Dice, Dice, Dice, Dice, Dice]> */
+            let hands = [
+                [Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice()],
+                [Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice()],
+                [Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice(), Dice.getRandomDice()]
+            ]
+
+            let temp = {
+                [this.calculateScore(hands[0])]: hands[0],
+                [this.calculateScore(hands[1])]: hands[1],
+                [this.calculateScore(hands[2])]: hands[2],
+            }
+
+            let opponentScore = Math.max(
+                ...Object.keys(temp).map(Number)
+            )
+
+            let chosenDice = temp[opponentScore]
+
+            //@ts-ignore
+            document.getElementById("bet").innerHTML = ""
+            //@ts-ignore
+            document.getElementById("controls").innerHTML = `<button onclick="startGame()">New Game</button>`
+            //@ts-ignore
+            document.getElementById("opDice").innerHTML = `Opponent Dice: ${chosenDice[0].html} ${chosenDice[1].html} ${chosenDice[2].html} ${chosenDice[3].html} ${chosenDice[4].html}= <span class="drinks">${opponentScore}</span>`
+            //@ts-ignore
+            document.getElementById("dice").innerHTML = "Your Dice: " + document.getElementById("dice").innerHTML + `= <span class="drinks">${this.score}</span>`
+            //@ts-ignore
+            document.getElementById("rollTotal").innerHTML = ``
+            
+
+            if (opponentScore >= this.score){
+                // Lost
+                //@ts-ignore
+                document.getElementById("totalBet").innerHTML = `Take <span class="drinks">${this.totalBet}</span> Drink(s)` 
+            } else{
+                // Won
+                //@ts-ignore
+                document.getElementById("totalBet").innerHTML = `Give out <span class="drinks">${this.totalBet}</span> Drink(s)` 
+            }
+
+        }
+
+    }
+
+
+    /**
+     * Clears the start screen and shows the game content
+     */
+    function clearStartScreen(){
+        //@ts-ignore
+        document.getElementById("setupGame").style.display = "none";
+        //@ts-ignore
+        document.getElementById("gameContent").style.display = "block";
+        //@ts-ignore
+        document.getElementById("gameContent").style.opacity = "1";
+        //@ts-ignore
+        document.getElementById("mainLogoContainer").style.top = "15vh"; 
+    }
+
+    function startGame(){
+        currentGame = new Balut()
+
+        // Startup new game
+        clearStartScreen()
+
+        // Reset old elements
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        //@ts-ignore
+        document.getElementById("rollTotal").innerHTML = ""
+        //@ts-ignore
+        document.getElementById("totalBet").innerHTML = ""
+        //@ts-ignore
+        document.getElementById("opDice").innerHTML = ""
+        //@ts-ignore
+        document.getElementById("dice").innerHTML = ""
+    }
+    </script>
+
+    <style is:inline>
+        .dice{
+            font-size:4rem;
+            font-family: sans-serif;
+            font-weight:400;
+        }
+    </style>
+
+</Layout>

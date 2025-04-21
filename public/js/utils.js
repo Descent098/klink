@@ -12,3 +12,17 @@ export function assertNotNull(item){
     return item
 
 }
+
+/**
+ * Clears the start screen and shows the game content
+ */
+function clearStartScreen(){
+    //@ts-ignore
+    document.getElementById("setupGame").style.display = "none";
+    //@ts-ignore
+    document.getElementById("gameContent").style.display = "block";
+    //@ts-ignore
+    document.getElementById("gameContent").style.opacity = "1";
+    //@ts-ignore
+    document.getElementById("mainLogoContainer").style.top = "15vh"; 
+}
