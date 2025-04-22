@@ -1,0 +1,154 @@
+---
+const gameName = "Rock Paper Scissors"
+import Layout from '../../layouts/GameLayout.astro';
+---
+<Layout title={gameName} onload="//@ts-ignore">
+    <div id="bet">
+        Your current bet is: <button onclick="currentGame.updateBet(-1)">-1</button> <span id="drinkBet">1</span> <button onclick="currentGame.updateBet(1)">+1</button> drink(s)
+    </div>
+    <div id="controls">
+        <button onclick="currentGame.choose('🪨')">🪨</button>
+        <button onclick="currentGame.choose('📄')">📄</button>
+        <button onclick="currentGame.choose('✂️')">✂️</button>
+    </div>
+    <div slot="instructions">
+        <h2>Welcome to {gameName}</h2>
+        <h3>Basic Rules</h3>
+        <p>Choose your bet, then choose between rock, paper or scissors. If you win give out drinks, if you lose, take them</p>
+        <h3>Winning</h3>
+        <p>There is an order to rock-paper-scissors (ties go to opponent), the order is</p>
+        <ul style="list-style: none;">
+            <li>Paper beats rock 🪨&lt;📄</li>
+            <li>Rock beats Scissors ✂️&lt;🪨</li>
+            <li>Scissors beats paper 📄&lt;✂️</li>
+        </ul>
+    </div>
+
+    <div slot="settings">
+        <p>No additional settings for this game</p>
+    </div>
+
+    <script is:inline>
+    /**
+     * The main instance of the game
+     * @type {RockPaperScissors?}
+     */
+    let currentGame = null
+
+
+    /**
+     * The main game instance, for most games this will be a singleton
+     */
+    class RockPaperScissors{
+        constructor(){
+            this.bet = 1
+        }
+
+        /**
+         * Ran when player chooses a move to make for the round
+         * @param value {"🪨"|"📄"|"✂️"} The value chosen by the player
+         */
+        choose(value){
+            const choices = ["🪨","📄","✂️"]
+
+            // Get a random choice
+            const opponentChoice = choices[Math.floor(Math.random() * choices.length)];
+
+            // Determine winner
+            let won = false
+            switch (opponentChoice){
+                case "🪨":
+                    if (value ==="📄"){
+                        won=true
+                    }
+                    break;
+                case "📄":
+                    if (value ==="✂️"){
+                        won=true
+                    }
+                    break;
+                case "✂️":
+                    if (value ==="🪨"){
+                        won=true
+                    }
+                    break;
+                default:
+                    throw new Error(`Unsupported value given to choose(): ${value}`)
+                    break; 
+            }
+            // Let player know if they need to take drinks (they lost), or give them out (they won)
+            let result = `Player chose: ${value}<br>Opponent Chose: ${opponentChoice}<br><br>`
+            if (won){
+                //@ts-ignore
+                document.getElementById("bet").innerHTML = result + `Give out <span id="drinkBet">${this.bet}</span> drink(s)`
+            } else{
+                //@ts-ignore
+                document.getElementById("bet").innerHTML = result + `Take <span id="drinkBet">${this.bet}</span> drink(s)`
+            }
+
+            // Provide a UI for the player to restart
+            //@ts-ignore
+            document.getElementById("controls").innerHTML = `<button onclick="startGame()">New Game</button>`
+        }
+
+        /**
+         * A function to update the bet and display the results
+         * @param amount {Number} The amount to increase/decrease the bet by
+         */
+        updateBet(amount){
+            if ((amount < 1 && this.bet > 1)||(amount > 0 && this.bet < 10)){
+                this.bet +=amount
+            } 
+            // Update bet indicator
+            //@ts-ignore
+            document.getElementById('drinkBet').innerHTML = this.bet;
+        }
+    }
+
+    /**
+     * Clears the start screen and shows the game content
+     */
+    function clearStartScreen(){
+        //@ts-ignore
+        document.getElementById("setupGame").style.display = "none";
+        //@ts-ignore
+        document.getElementById("gameContent").style.display = "block";
+        //@ts-ignore
+        document.getElementById("gameContent").style.opacity = "1";
+        //@ts-ignore
+        document.getElementById("mainLogoContainer").style.top = "15vh"; 
+
+    }
+
+    /**
+     * Function to start the game
+     */
+    function startGame(){
+        clearStartScreen()
+        currentGame = new RockPaperScissors()
+
+        // Clean up/reset UI
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = `Your current bet is: <button onclick="currentGame.updateBet(-1)">-1</button> <span id="drinkBet">1</span> <button onclick="currentGame.updateBet(1)">+1</button> drink(s)`
+        //@ts-ignore
+        document.getElementById("controls").innerHTML = `
+        <button onclick="currentGame.choose('🪨')">🪨</button>
+        <button onclick="currentGame.choose('📄')">📄</button>
+        <button onclick="currentGame.choose('✂️')">✂️</button>
+        `
+    }
+    </script>
+
+    <style is:global>
+        #bet button{
+            display:inline;
+            font-size:1rem;
+            font-family:cursive; 
+            padding:.3rem;
+        }
+        #drinkBet{
+            font-family:system-ui, sans-serif;
+        }
+    </style>
+
+</Layout>
