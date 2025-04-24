@@ -28,4 +28,13 @@ class Dice{
         const diceNumber = Math.floor(Math.random() * (maxValue - minValue + 1) + minValue)
         return new Dice(diceNumber, minValue, maxValue)
     }
+
+    /**
+     * 
+     * @param {Dice[]} diceArray The array of dice to sort
+     * @returns {Dice[]} The sorted dice array (note it also sorts inplace on original reference)
+     */
+    static sortDiceArray(diceArray){
+        return diceArray.sort((cur,next) => cur.number-next.number)
+    }
 }
