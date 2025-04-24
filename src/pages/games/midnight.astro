@@ -1,0 +1,383 @@
+---
+import Layout from '../../layouts/GameLayout.astro';
+const gameName = "Midnight"
+
+// Midnight
+// --------
+// Roll 6 dice per turn
+// You MUST keep at least 1 you haven't kept per round, once kept you can't replace it
+//
+
+// Winning
+// You must have a 1 and a 4 to have any points
+// The 1 and 4 do not count towards your points
+// Total the remaining dice, and that's your score
+
+---
+
+<Layout title={gameName} onload="//@ts-nocheck">
+
+
+    <div id="opDice">
+
+    </div>
+
+    <div id="currentDice">
+
+    </div>
+
+    <div id="outcome">
+
+    </div>
+
+    <div id="totalBet">
+
+    </div>
+
+    <div id="bet">
+        Your current bet is: <button onclick="currentGame.updateBet(-1)">-1</button> <span id="drinkBet" class="drinks">1</span> <button onclick="currentGame.updateBet(1)">+1</button> drink(s)
+    </div>
+
+
+    <div id="controls">
+        <button onclick="currentGame.roll()">Roll Dice</button>
+    </div>
+
+    <div slot="instructions">
+        <h2>Welcome to {gameName}</h2>
+        <p>Midnight is a game of chance with a dash of quick-thinking, and strategizing</p>
+        <h3>Basic Rules</h3>
+        <p>Each roll you are given the option to keep dice. You MUST keep at least 1 die per roll. Game ends when you have kept 6 dice.</p>
+        <h3>Winning</h3>
+        <p>In order to score you must have kept a 1 and a 4. If you don't have both, you get a 0 score. You win if your score is better than your opponents (ties go to the opponent)</p>
+    </div>
+
+    <div slot="settings">
+    </div>
+
+    <script src="/js/dice.js" is:inline></script>
+    <script is:inline>
+        /**@type {Midnight?} */
+        let currentGame = null
+
+        class Midnight{
+            constructor(){
+                this.totalBet = 0
+                this.currentBet = 1
+                /**@type {Dice[]} */
+                this.keptDice = []
+                /**@type {Dice[]} */
+                this.currentRoll = []
+                /**@type {Dice[]} */
+                this.diceToKeep = []
+            }
+
+            roll(){
+                if ((this.currentRoll.length > 0) && !(this.diceToKeep.length > 0)){
+                    // Must keep at least 1 dice
+                    // TODO: Display to user
+                    console.log("Can't reroll")
+                    return
+                }
+                // Update state
+                this.keptDice = [...this.keptDice, ...this.diceToKeep]
+                this.keptDice = Dice.sortDiceArray(this.keptDice)
+                this.totalBet += this.currentBet
+
+                if (this.keptDice.length === 6){
+                    this.finished()
+                    return
+                }
+                // Reset state
+                this.diceToKeep = []
+                this.currentRoll = [] 
+                this.currentBet = 1
+                // Reset UI
+                //@ts-ignore
+                document.getElementById("drinkBet").innerHTML = 1
+                //@ts-ignore
+                document.getElementById("currentDice").innerHTML = ""
+                //@ts-ignore
+                document.getElementById("totalBet").innerHTML = `Your total bets so far: <span class="drinks">${this.totalBet}</span>`
+
+                // Generate new dice
+                let diceToRoll = 6 - this.keptDice.length
+
+                for (let i=0; i < diceToRoll; i++){
+                    const newDice = Dice.getRandomDice()
+                    this.currentRoll.push(newDice)
+                    //@ts-ignore
+                    document.getElementById("currentDice").innerHTML += `
+                    <div class="die">
+                        ${newDice.html}
+                        <button onclick="currentGame.keepDice(${i}, this)">Keep</button>
+                    </div>`
+                }
+                this.currentRoll = [...this.currentRoll, ...this.keptDice]
+
+                for (const die of this.keptDice){
+                    //@ts-ignore
+                    document.getElementById("currentDice").innerHTML += `
+                    <div class="die">
+                        ${die.html}
+                        <button class="disabled">Kept</button>
+                    </div>`
+                }
+
+            }
+
+            /**
+             * Keeps the specified dice
+             * @param index {Number} The index of the dice to keep
+             * @param button {HTMLElement} The button clicked
+             */
+            keepDice(index, button){
+                const die = this.currentRoll[index]
+                this.diceToKeep.push(die)
+                button.innerHTML = "Unkeep"
+                button.onclick = () => this.unKeepDice(index, button, die);
+            }
+
+            /**
+             * Unkeeps the specified dice
+             * @param index {Number} The currentRoll index of the dice to unkeep
+             * @param button {HTMLElement} The button clicked
+             * @param die {Dice} The dice to unkeep
+             */
+             unKeepDice(index, button, die){
+                // TODO
+                this.diceToKeep.indexOf(die)
+                
+
+                button.innerHTML = "Keep"
+                button.onclick = () => this.keepDice(index, button);
+            }
+
+            /**
+             * A function to update the bet and display the results
+             * @param amount {Number} The amount to increase/decrease the bet by
+             */
+            updateBet(amount){
+                if ((amount < 1 && this.currentBet > 1)||(amount > 0 && this.currentBet < 10)){
+                    this.currentBet +=amount
+                } 
+                // Update bet indicator
+                //@ts-ignore
+                document.getElementById('drinkBet').innerHTML = this.currentBet;
+            }
+
+            /**
+             * Calculates the value of the roll
+             * @param roll {Dice[]}
+             * @returns {Number} The value of the roll
+             */
+            calculateRollValue(roll){
+                roll = Dice.sortDiceArray(roll)
+
+                let hasOne = false
+                let hasFour = false
+                let result = 0
+                for (const die of roll){
+                    if (die.number === 1 && !hasOne){
+                        hasOne = true
+                    } else if (die.number === 4 && !hasFour){
+                        hasFour = true
+                    } else{
+                        result += die.number
+                    }
+                }
+
+                if (hasFour && hasOne){
+                    return result
+                } else{
+                    return 0
+                }
+
+            }
+
+            /**
+             * Generate an opponent move
+             * @returns {Dice[]} The opponent move
+             */
+            runOpponent(){
+                /**@type {Dice[]} */
+                let opponentKeptDice = []
+                let opponentHasOne = false
+                let opponentHasFour = false
+
+                while (opponentKeptDice.length < 6){
+                    let keptADie = false
+                    let diceToGenerate = 6 - opponentKeptDice.length
+                    /**@type {Dice[]} */
+                    let generatedDice = []
+                    for (let i=0; i<diceToGenerate; i++){
+                        const newDie = Dice.getRandomDice()
+                        generatedDice.push(newDie)
+                        if (newDie.number == 1 && !opponentHasOne){
+                            opponentHasOne = true
+                            keptADie = true
+                            opponentKeptDice.push(newDie)                            
+                        } else if (newDie.number == 4 && !opponentHasFour){
+                            opponentHasFour = true
+                            keptADie = true
+                            opponentKeptDice.push(newDie)
+                        } else if (newDie.number == 5 || newDie.number == 6){
+                            keptADie = true
+                            opponentKeptDice.push(newDie)
+                        }
+                    }
+                    if (!keptADie){
+                        // Keep largest Die
+                        generatedDice = Dice.sortDiceArray(generatedDice)
+                        opponentKeptDice.push(generatedDice[generatedDice.length-1])
+                    }
+                }
+                return opponentKeptDice
+            }
+
+            finished(){
+                console.log("finished")
+                let playerTotal = this.calculateRollValue(this.currentRoll)
+                //@ts-ignore
+                document.getElementById("currentDice").innerHTML = `<p>You:</p>
+                    <div class="die">
+                        ${this.currentRoll[0].html}
+                    </div>
+                    <div class="die">
+                        ${this.currentRoll[1].html}
+                    </div>
+                    <div class="die">
+                        ${this.currentRoll[2].html}
+                    </div>
+                    <div class="die">
+                        ${this.currentRoll[3].html}
+                    </div>
+                    <div class="die">
+                        ${this.currentRoll[4].html}
+                    </div>
+                    <div class="die">
+                        ${this.currentRoll[5].html}
+                    </div>
+                    <div>
+                        Total = <span class="drinks">${playerTotal}</span>
+                    </div>
+                `
+                //@ts-ignore
+                document.getElementById("controls").innerHTML = `<button onclick="startGame()">New Game</button>`
+
+                // Determine opponent score and compare
+                let opponent = this.runOpponent()
+                let opponentScore = this.calculateRollValue(opponent)
+
+                //@ts-ignore
+                document.getElementById("opDice").innerHTML = `<p>Opponent:</p>
+                    <div class="die">
+                        ${opponent[0].html}
+                    </div>
+                    <div class="die">
+                        ${opponent[1].html}
+                    </div>
+                    <div class="die">
+                        ${opponent[2].html}
+                    </div>
+                    <div class="die">
+                        ${opponent[3].html}
+                    </div>
+                    <div class="die">
+                        ${opponent[4].html}
+                    </div>
+                    <div class="die">
+                        ${opponent[5].html}
+                    </div>
+                    <div>
+                        Total = <span class="drinks">${opponentScore}</span>
+                    </div>
+                `
+
+                // Determine who won
+                if (playerTotal > opponentScore){
+                    //@ts-ignore
+                    document.getElementById("totalBet").innerHTML = `Give out <span class="drinks">${this.totalBet} drink(s)</span>`
+                } else {
+                    //@ts-ignore
+                    document.getElementById("totalBet").innerHTML = `Take <span class="drinks">${this.totalBet} drink(s)</span>`
+                }
+
+                //@ts-ignore
+                document.getElementById("bet").innerHTML = ""
+            }
+        }
+    
+    
+    /**
+     * Clears the start screen and shows the game content
+     */
+    function clearStartScreen(){
+        //@ts-ignore
+        document.getElementById("setupGame").style.display = "none";
+        //@ts-ignore
+        document.getElementById("gameContent").style.display = "block";
+        //@ts-ignore
+        document.getElementById("gameContent").style.opacity = "1";
+        //@ts-ignore
+        document.getElementById("mainLogoContainer").style.top = "15vh"; 
+    }
+
+    function startGame(){
+        currentGame = new Midnight()
+
+        // Startup new game
+        clearStartScreen()
+        
+        // Reset any old game displays
+        //@ts-ignore
+        document.getElementById("totalBet").innerHTML = ""
+        //@ts-ignore
+        document.getElementById("opDice").innerHTML = ""
+        //@ts-ignore
+        document.getElementById("currentDice").innerHTML = ""
+        //@ts-ignore
+        document.getElementById("outcome").innerHTML = ""
+        
+        // Setup initial game UI
+        //@ts-ignore
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        //@ts-ignore
+        document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button>`
+        currentGame.currentBet = 0
+        currentGame.roll()
+        
+    }
+    </script>
+    
+        <style is:inline>
+            .dice{
+                font-size:4rem;
+                font-family: sans-serif;
+                font-weight:400;
+            }
+            #bet button{
+                display:inline;
+                font-size:1rem;
+                font-family:cursive; 
+                padding:.3rem;
+            }
+            #currentDice,
+            #opDice{
+                display:flex;
+                align-items:center;
+            }
+            .die{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            .die button{
+                font-size:.75rem;
+                font-family:cursive; 
+                padding:.6rem;
+            }
+        </style>
+
+</Layout>
