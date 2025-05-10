@@ -1,78 +1,77 @@
 ---
-const site = Astro.site!.href
 import Layout from '../../layouts/BaseLayout.astro';
 ---
 
 <Layout>
-	<h1><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> Games List</h1>
+	<h1><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> klink</span> Games List</h1>
 	<div class="gamesList">
 		<a class="gameCard" href="/games/bingo" >
 			<img src="/img/bingo/screenshot.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Bingo</h3>
+				<h3 transition:name="Bingo">Bingo</h3>
 				<p>Classic Bingo with a twist. Complete challenges to get to the next ball, be the first to get a bingo and win a fun reward.</p>
 			</div>
 		</a>
 		<a class="gameCard" href="/games/blackjack" >
 			<img src="/img/blackjack/screenshot.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Blackjack</h3>
+				<h3 transition:name="Blackjack">Blackjack</h3>
 				<p>Classic BlackJack with a twist. Bet on each hand, win to give out drinks, lose and have to take them!</p>
 			</div>
 		</a>
 		<a class="gameCard" href="/games/ride-the-bus" >
 			<img src="/img/ride-the-bus/screenshot.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Ride The Bus</h3>
+				<h3 transition:name="Ride The Bus">Ride The Bus</h3>
 				<p>Go through 4 rounds of chance-based card games, win them all and give out plenty of drinks, lose them, and take them!</p>
 			</div>
 		</a>
 		<a class="gameCard" href="/games/fifteen" >
 			<img src="/img/fifteen/screenshot.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Fifteen</h3>
+				<h3 transition:name="Fifteen">Fifteen</h3>
 				<p>Roll dice to get to the goal number, win big or lose big depending on how greedy you're feeling</p>
 			</div>
 		</a>
 		<a class="gameCard" href="/games/balut" >
 			<img src="/img/balut/screenshot.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Balut</h3>
+				<h3 transition:name="Balut">Balut</h3>
 				<p>A simple dice game, roll hands and get a score. Win and give out drinks, lose and take them</p>
 			</div>
 		</a>
 		<a class="gameCard" href="/games/rock-paper-scissors" data-astro-prefetch="hover">
 			<img src="/img/rps/screenshot.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Rock Paper Scissors</h3>
+				<h3 transition:name="Rock Paper Scissors">Rock Paper Scissors</h3>
 				<p>The classic game of rock, paper, scissors, win and give out drinks, lose or tie and take them!</p>
 			</div>
 		</a>
 		<a class="gameCard" href="/games/midnight" data-astro-prefetch="hover">
 			<img src="/img/midnight/screenshot.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Midnight</h3>
+				<h3 transition:name="Midnight">Midnight</h3>
 				<p>A dice game of chance, with a dash of quick-thinking, and strategizing</p>
 			</div>
 		</a>
 		<a class="gameCard" href="#" data-astro-prefetch="hover">
 			<img src="/img/coming-soon.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Scavengers</h3>
+				<h3 transition:name="Scavengers">Scavengers</h3>
 				<p>Hunt for things out in the world, each item gets you drinks. First one gets to give them out</p>
 			</div>
 		</a>
 		<a class="gameCard" href="#" data-astro-prefetch="hover">
 			<img src="/img/coming-soon.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Grambling</h3>
+				<h3 transition:name="Grambling">Grambling</h3>
 				<p>A series of simple games where you bet your drinks. Win and give them out, lose and have to take them</p>
 			</div>
 		</a>
 		<a class="gameCard" href="#" data-astro-prefetch="hover">
 			<img src="/img/coming-soon.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>Trivia</h3>
+				<h3 transition:name="Trivia">Trivia</h3>
 				<p>How much do you know about what you're drinking? Right answers get you more gifts to give out. Wrong ones give you consequences</p>
 			</div>
 		</a>
@@ -80,7 +79,7 @@ import Layout from '../../layouts/BaseLayout.astro';
 		<a class="gameCard" href="#" data-astro-prefetch="hover">
 			<img src="/img/coming-soon.png" alt="" width="40%">
 			<div class="gameInfo">
-				<h3>In it to win it</h3>
+				<h3 transition:name="In it to win it">In it to win it</h3>
 				<p>Play various bar bets to give out drinks to your friends, fail them and drink double what you bet</p>
 			</div>
 		</a>

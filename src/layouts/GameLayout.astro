@@ -12,7 +12,7 @@ const { title } = Astro.props;
             <button class="close" onclick="document.getElementById('endGameOutcome').close();body.style.overflow='auto';startGame()">Restart Game</button>
         </dialog>
     </div>
-    <h1 id="mainLogoContainer"><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> Klnk</span> { title }</h1>
+    <h1 id="mainLogoContainer"><span transition:name="inlineLogo" id="inlineLogo"><img src="/icon.png" alt="" srcset="" width="50px"> klink</span> <span transition:name={title}>{ title }</span></h1>
     <div id="gameContent">
         <slot />
     </div>

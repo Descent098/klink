@@ -1,12 +1,12 @@
-# Klnk
+# klink
 
-![logo](./public/icon.png) Klnk is a site filled with simple drinking games for people to play. It's built using [astro](https://astro.build/), and was also home to multiple HTML 5 as-a-game-engine experiments. More details of which can be found in articles I've written here:
+![logo](./public/icon.png) klink is a site filled with simple drinking games for people to play. It's built using [astro](https://astro.build/), and was also home to multiple HTML 5 as-a-game-engine experiments. More details of which can be found in articles I've written here:
 
 - https://kieranwood.ca/tech/blog/utf-8-games/
 
 ## Contributing
 
-To contribute to the project, first check out the [wiki](https://github.com/Descent098/klnk/wiki), it will have all the info you need to contribute!
+To contribute to the project, first check out the [wiki](https://github.com/Descent098/klink/wiki), it will have all the info you need to contribute!
 
 ## 🧞 Commands
 
