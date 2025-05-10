@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/GameLayout.astro';
-const gameName = "Blackjack"
+export const gameName = "Blackjack"
+export const description = "Classic BlackJack with a twist. Bet on each hand, win to give out drinks, lose and have to take them!"
 ---
 <Layout title={gameName} onload="//@ts-nocheck" transitionName="Blackjack">
     <div id="dealerCards">
