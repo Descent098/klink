@@ -1,3 +1,19 @@
+// TODO:
+//   - Add ability to set which challenges to skip
+//   - Add more challenges
+
+/**
+ * @typedef {"Blue"|"Red"|"Clear"|"Shot"|"Creamy"} ChallengeType
+ * @type {{Blue: ChallengeType, Red: ChallengeType, Clear: ChallengeType, Shot: ChallengeType, Creamy: ChallengeType}}
+ */
+const ChallengeTypes = Object.freeze({
+    Blue: "Blue",
+    Red: "Red",
+    Clear: "Clear",
+    Shot: "Shot",
+    Creamy: "Creamy"
+  });
+
 /**
  * The Current Game
  *
@@ -33,7 +49,7 @@ class Challenge{
      * @param {String} title A title for the challenge, games can choose to display this or not
      * @param {String} text The text to display to user, use <DRINK_AMOUNT> as placeholder for amount of drinks
      * @param {Number} drinks The baseline number of drinks (will be modified by provided modifier)
-     * @param {"creamy"|"blue"|"red"|"shot"} type The type of challenge
+     * @param {ChallengeType} type The type of challenge
      */
     constructor(title, text, drinks, type){
         this.title = title
@@ -53,19 +69,67 @@ class Challenge{
     /**
      * Generate a random Challenge
      * @param {Number} modifier The players modifier (1 for players with "normal" amount of drinks set)
+     * @param {ChallengeType[]} skippedChallenges Which type of challenge to skip
      * @returns {Challenge}
      */
-    static randomChallenge(modifier=1){
+    static randomChallenge(modifier=1, skippedChallenges =[]){
         // Generate Challenge
+        /**
+         * @typedef {string} Label
+         * @typedef {string} Description
+         * @typedef {number} AmountOfDrinks
+         * @typedef {[Label, Description, AmountOfDrinks, ChallengeType]} ChallengeTuple
+         * @type {ChallengeTuple[]}
+         */
         let challenges = [
-            ["Creamy","Take <DRINK_AMOUNT> drink(s) of something creamy" , Math.floor(1* modifier), "creamy"],
-            ["Wake up","Take <DRINK_AMOUNT> drink(s) of something with coffee or espresso" , Math.floor(1* modifier), "creamy"],
-            ["Blue Baddie","Take <DRINK_AMOUNT> drink(s) of something blue" , Math.floor(2* modifier), "blue"],
-            ["Fruity","Take <DRINK_AMOUNT> drink(s) of something blue and fruity" , Math.floor(2* modifier), "blue"],
-            ["Radical Red","Take <DRINK_AMOUNT> drink(s) of something red" , Math.floor(2* modifier), "red"],
-            ["Clear and dangerout","Take <DRINK_AMOUNT> drink(s) of something clear" , Math.floor(2* modifier), "clear"],
-            ["SHOTS, SHOTS, SHOTS, SHOTS, SHOTS, SHOTS","Take <DRINK_AMOUNT> shot(s)" , Math.floor(1* modifier), "shot"],
-            ["Branch Out","Take <DRINK_AMOUNT> shot(s) you've never tried before" , Math.floor(1* modifier), "shot"],
+            [
+                "Creamy",
+                "Take <DRINK_AMOUNT> drink(s) of something creamy" , 
+                Math.floor(1* modifier), 
+                ChallengeTypes.Creamy
+            ],
+            [
+                "Wake up",
+                "Take <DRINK_AMOUNT> drink(s) of something with coffee or espresso" , 
+                Math.floor(1* modifier), 
+                ChallengeTypes.Creamy
+            ],
+            [
+                "Blue Baddie",
+                "Take <DRINK_AMOUNT> drink(s) of something blue" , 
+                Math.floor(2* modifier), 
+                ChallengeTypes.Blue
+            ],
+            [
+                "Fruity",
+                "Take <DRINK_AMOUNT> drink(s) of something blue and fruity" , 
+                Math.floor(2* modifier), 
+                ChallengeTypes.Blue
+            ],
+            [
+                "Radical Red",
+                "Take <DRINK_AMOUNT> drink(s) of something red" , 
+                Math.floor(2* modifier), 
+                ChallengeTypes.Red
+            ],
+            [
+                "Clear and dangerout",
+                "Take <DRINK_AMOUNT> drink(s) of something clear" , 
+                Math.floor(2* modifier), 
+                ChallengeTypes.Clear
+            ],
+            [
+                "SHOTS, SHOTS, SHOTS, SHOTS, SHOTS, SHOTS",
+                "Take <DRINK_AMOUNT> shot(s)" , 
+                Math.floor(1* modifier), 
+                ChallengeTypes.Shot
+            ],
+            [
+                "Branch Out",
+                "Take <DRINK_AMOUNT> shot(s) you've never tried before" , 
+                Math.floor(1* modifier), 
+                ChallengeTypes.Shot
+            ],
         ]
 
         const randomIndex = Math.floor(Math.random() * challenges.length);
