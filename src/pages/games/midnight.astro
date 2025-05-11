@@ -36,12 +36,12 @@ export const description = "A dice game of chance, with a dash of quick-thinking
     </div>
 
     <div id="bet">
-        Your current bet is: <button onclick="currentGame.updateBet(-1)">-1</button> <span id="drinkBet" class="drinks">1</span> <button onclick="currentGame.updateBet(1)">+1</button> drink(s)
+        Your current bet is: <button onclick="window.currentGame.updateBet(-1)">-1</button> <span id="drinkBet" class="drinks">1</span> <button onclick="window.currentGame.updateBet(1)">+1</button> drink(s)
     </div>
 
 
     <div id="controls">
-        <button onclick="currentGame.roll()">Roll Dice</button>
+        <button onclick="window.currentGame.roll()">Roll Dice</button>
     </div>
 
     <div slot="instructions">
@@ -59,7 +59,7 @@ export const description = "A dice game of chance, with a dash of quick-thinking
     <script src="/js/dice.js" is:inline></script>
     <script is:inline>
         /**@type {Midnight?} */
-        let currentGame = null
+        window.currentGame = null
 
         class Midnight{
             constructor(){
@@ -111,7 +111,7 @@ export const description = "A dice game of chance, with a dash of quick-thinking
                     document.getElementById("currentDice").innerHTML += `
                     <div class="die">
                         ${newDice.html}
-                        <button onclick="currentGame.keepDice(${i}, this)">Keep</button>
+                        <button onclick="window.currentGame.keepDice(${i}, this)">Keep</button>
                     </div>`
                 }
                 this.currentRoll = [...this.currentRoll, ...this.keptDice]
@@ -325,7 +325,7 @@ export const description = "A dice game of chance, with a dash of quick-thinking
     }
 
     function startGame(){
-        currentGame = new Midnight()
+        window.currentGame = new Midnight()
 
         // Startup new game
         clearStartScreen()
@@ -342,11 +342,11 @@ export const description = "A dice game of chance, with a dash of quick-thinking
         
         // Setup initial game UI
         //@ts-ignore
-        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)`
         //@ts-ignore
-        document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button>`
-        currentGame.currentBet = 0
-        currentGame.roll()
+        document.getElementById("controls").innerHTML = `<button onclick="window.currentGame.roll()">Roll Dice</button>`
+        window.currentGame.currentBet = 0
+        window.currentGame.roll()
         
     }
     </script>

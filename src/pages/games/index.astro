@@ -52,7 +52,7 @@ const comingSoon: Games[] =[
 	<div class="gamesList">
 
 		{posts && posts.map((post) => (
-			<a class="gameCard" href={`/games/${post.slug}`}>
+			<a class="gameCard" href={`/games/${post.slug}`} rel="external">
 			  <img src={`/img/${post.slug}/screenshot.png`} alt="" width="40%" />
 			  <div class="gameInfo">
 				<h3 transition:name={post.gameName}>{post.gameName}</h3>

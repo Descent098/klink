@@ -9,14 +9,14 @@ export const description = "Go through 4 rounds of chance-based card games, win 
 
     
     <div id="bet">
-        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)
+        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)
     </div>
     <h2 id="roundInfo">The card color will be?</h2>
     <div id="controls">
-        <button style="background:rgba(202, 14, 14, 0.889);" onclick="currentGame.firstRound('red')">
+        <button style="background:rgba(202, 14, 14, 0.889);" onclick="window.currentGame.firstRound('red')">
             Red
         </button>
-        <button onclick="currentGame.firstRound('black')">
+        <button onclick="window.currentGame.firstRound('black')">
             Black
         </button>
     </div>
@@ -45,8 +45,8 @@ export const description = "Go through 4 rounds of chance-based card games, win 
 
     <div slot="settings">
         <fieldset>
-            <label for="acesHigh">Ace value</label>
-            <select name="acesHigh" id="acesHigh" onchange="if (this.value==='1'){acesHigh = true}else{acesHigh = false}">
+            <label for="window.acesHigh">Ace value</label>
+            <select name="window.acesHigh" id="window.acesHigh" onchange="if (this.value==='1'){window.acesHigh = true}else{window.acesHigh = false}">
                 <option value="0">Aces low (1)</option>
                 <option value="1" selected>Aces High (11)</option>
             </select>
@@ -58,14 +58,14 @@ export const description = "Go through 4 rounds of chance-based card games, win 
 <script is:inline>
 
 /**@type {RideTheBus?} */
-let currentGame = null
+window.currentGame = null
 
-let acesHigh = true
+window.acesHigh = true
 
 
 class RideTheBus{
     constructor(){
-        this.deck = new Deck(acesHigh)
+        this.deck = new Deck(window.acesHigh)
         this.totalBet = 0;
         this.currentBet = 1;
         this.owedDrinks = 0
@@ -126,10 +126,10 @@ class RideTheBus{
             this.totalBet += this.currentBet
             //@ts-ignore
             document.getElementById("controls").innerHTML = `
-                <button style="background:#f0f0f0; color:#141414;" onclick="currentGame.secondRound('higher')">
+                <button style="background:#f0f0f0; color:#141414;" onclick="window.currentGame.secondRound('higher')">
                     Higher
                 </button>
-                <button onclick="currentGame.secondRound('lower')">
+                <button onclick="window.currentGame.secondRound('lower')">
                     Lower
                 </button>
             `
@@ -150,7 +150,7 @@ class RideTheBus{
         document.getElementById("currentCards").innerHTML = this.firstCard.html
         this.currentBet = 1;
         //@ts-ignore
-        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)`
         
     }
 
@@ -166,10 +166,10 @@ class RideTheBus{
             this.totalBet += this.currentBet
             //@ts-ignore
             document.getElementById("controls").innerHTML = `
-                <button style="background:#f0f0f0; color:#141414;" onclick="currentGame.thirdRound('inbetween')">
+                <button style="background:#f0f0f0; color:#141414;" onclick="window.currentGame.thirdRound('inbetween')">
                     In-Between
                 </button>
-                <button onclick="currentGame.thirdRound('outside')">
+                <button onclick="window.currentGame.thirdRound('outside')">
                     Outside
                 </button>
             `
@@ -187,7 +187,7 @@ class RideTheBus{
         document.getElementById("currentCards").innerHTML = `${this.firstCard.html} ${this.secondCard.html}`
         this.currentBet = 1;
         //@ts-ignore
-        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)`
      }
 
      /**
@@ -215,16 +215,16 @@ class RideTheBus{
             this.totalBet += this.currentBet
             //@ts-ignore
             document.getElementById("controls").innerHTML = `
-                <button onclick="currentGame.lastRound('♠')">
+                <button onclick="window.currentGame.lastRound('♠')">
                     ♠
                 </button>
-                <button style="background:red; color:#f0f0f0;" onclick="currentGame.lastRound('♥')">
+                <button style="background:red; color:#f0f0f0;" onclick="window.currentGame.lastRound('♥')">
                     ♥
                 </button>
-                <button onclick="currentGame.lastRound('♣')">
+                <button onclick="window.currentGame.lastRound('♣')">
                     ♣
                 </button>
-                <button style="background:red; color:#f0f0f0;" onclick="currentGame.lastRound('♦')">
+                <button style="background:red; color:#f0f0f0;" onclick="window.currentGame.lastRound('♦')">
                     ♦
                 </button>
             `
@@ -239,7 +239,7 @@ class RideTheBus{
         }
         this.currentBet = 1;
         //@ts-ignore
-        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)`
         //@ts-ignore
         document.getElementById("currentCards").innerHTML = this.thirdCard.html
 
@@ -271,7 +271,7 @@ class RideTheBus{
 
 function startGame(){
 
-    currentGame = new RideTheBus()
+    window.currentGame = new RideTheBus()
     // Cleanup old game items
     //@ts-ignore
     document.getElementById("endGameNotice").style.display = "none"
@@ -292,7 +292,7 @@ function startGame(){
     // Startup new game
 
     //@ts-ignore
-    document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+    document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)`
     //@ts-ignore
     document.getElementById("currentCards").innerHTML = ""
     //@ts-ignore
@@ -303,10 +303,10 @@ function startGame(){
 
     //@ts-ignore
     document.getElementById("controls").innerHTML = `
-    <button style="background:rgba(202, 14, 14, 0.889);" onclick="currentGame.firstRound('red')">
+    <button style="background:rgba(202, 14, 14, 0.889);" onclick="window.currentGame.firstRound('red')">
             Red
         </button>
-        <button onclick="currentGame.firstRound('black')">
+        <button onclick="window.currentGame.firstRound('black')">
             Black
         </button>`
 

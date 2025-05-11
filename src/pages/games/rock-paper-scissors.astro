@@ -5,12 +5,12 @@ export const description = "The classic game of rock, paper, scissors, win and g
 ---
 <Layout title={gameName} onload="//@ts-ignore">
     <div id="bet">
-        Your current bet is: <button onclick="currentGame.updateBet(-1)">-1</button> <span id="drinkBet">1</span> <button onclick="currentGame.updateBet(1)">+1</button> drink(s)
+        Your current bet is: <button onclick="window.currentGame.updateBet(-1)">-1</button> <span id="drinkBet">1</span> <button onclick="window.currentGame.updateBet(1)">+1</button> drink(s)
     </div>
     <div id="controls">
-        <button onclick="currentGame.choose('🪨')">🪨</button>
-        <button onclick="currentGame.choose('📄')">📄</button>
-        <button onclick="currentGame.choose('✂️')">✂️</button>
+        <button onclick="window.currentGame.choose('🪨')">🪨</button>
+        <button onclick="window.currentGame.choose('📄')">📄</button>
+        <button onclick="window.currentGame.choose('✂️')">✂️</button>
     </div>
     <div slot="instructions">
         <h2>Welcome to {gameName}</h2>
@@ -34,7 +34,7 @@ export const description = "The classic game of rock, paper, scissors, win and g
      * The main instance of the game
      * @type {RockPaperScissors?}
      */
-    let currentGame = null
+    window.currentGame = null
 
 
     /**
@@ -126,16 +126,16 @@ export const description = "The classic game of rock, paper, scissors, win and g
      */
     function startGame(){
         clearStartScreen()
-        currentGame = new RockPaperScissors()
+        window.currentGame = new RockPaperScissors()
 
         // Clean up/reset UI
         //@ts-ignore
-        document.getElementById("bet").innerHTML = `Your current bet is: <button onclick="currentGame.updateBet(-1)">-1</button> <span id="drinkBet">1</span> <button onclick="currentGame.updateBet(1)">+1</button> drink(s)`
+        document.getElementById("bet").innerHTML = `Your current bet is: <button onclick="window.currentGame.updateBet(-1)">-1</button> <span id="drinkBet">1</span> <button onclick="window.currentGame.updateBet(1)">+1</button> drink(s)`
         //@ts-ignore
         document.getElementById("controls").innerHTML = `
-        <button onclick="currentGame.choose('🪨')">🪨</button>
-        <button onclick="currentGame.choose('📄')">📄</button>
-        <button onclick="currentGame.choose('✂️')">✂️</button>
+        <button onclick="window.currentGame.choose('🪨')">🪨</button>
+        <button onclick="window.currentGame.choose('📄')">📄</button>
+        <button onclick="window.currentGame.choose('✂️')">✂️</button>
         `
     }
     </script>

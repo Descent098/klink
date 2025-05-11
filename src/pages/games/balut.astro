@@ -20,11 +20,11 @@ export const description = "A simple dice game, roll hands and get a score. Win 
     </div>
 
     <div id="bet">
-        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)
+        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)
     </div>
 
     <div id="controls">
-        <button onclick="currentGame.roll()">Roll Dice</button>
+        <button onclick="window.currentGame.roll()">Roll Dice</button>
     </div>
 
 
@@ -51,8 +51,11 @@ export const description = "A simple dice game, roll hands and get a score. Win 
 
     <script is:inline>
 
-    /**@type {Balut?} */
-    let currentGame = null
+    
+    /**
+     * @type {Balut?}
+     * @ts-ignore */
+    window.currentGame = null
 
     class Balut{
         constructor(){
@@ -85,9 +88,9 @@ export const description = "A simple dice game, roll hands and get a score. Win 
             //@ts-ignore
             document.getElementById("rollTotal").innerHTML = `Your roll is worth <span class="drinks">${this.score}<span>`
             //@ts-ignore
-            document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+            document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)`
             //@ts-ignore
-            document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button> <button onclick="currentGame.finished()">Stick with roll</button>`
+            document.getElementById("controls").innerHTML = `<button onclick="window.currentGame.roll()">Roll Dice</button> <button onclick="window.currentGame.finished()">Stick with roll</button>`
             //@ts-ignore
             document.getElementById("totalBet").innerHTML = `Your current total bet is: <span class="drinks">${this.totalBet}</span>`
             
@@ -234,14 +237,15 @@ export const description = "A simple dice game, roll hands and get a score. Win 
     }
 
     function startGame(){
-        currentGame = new Balut()
+        //@ts-ignore
+        window.currentGame = new Balut()
 
         // Startup new game
         clearStartScreen()
 
         // Reset old elements
         //@ts-ignore
-        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)`
         //@ts-ignore
         document.getElementById("rollTotal").innerHTML = ""
         //@ts-ignore
@@ -251,7 +255,7 @@ export const description = "A simple dice game, roll hands and get a score. Win 
         //@ts-ignore
         document.getElementById("dice").innerHTML = ""
         //@ts-ignore
-        document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button>`
+        document.getElementById("controls").innerHTML = `<button onclick="window.currentGame.roll()">Roll Dice</button>`
     }
     </script>
 

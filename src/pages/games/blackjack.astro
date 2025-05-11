@@ -11,19 +11,19 @@ export const description = "Classic BlackJack with a twist. Bet on each hand, wi
     </div>
 
     <div id="bet">
-        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)
+        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.bet > 1){window.currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.bet < 10){window.currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.bet;">+1</button> drink(s)
     </div>
     <div id="winnings">
 
     </div>
     <div style="display:flex">
-        <button id="stayButton" onclick="document.getElementById('subtractFromBet').style.display='none';document.getElementById('addToBet').style.display='none';document.getElementById('hitMeButton').style.display='none';currentGame.playerDone();">
+        <button id="stayButton" onclick="document.getElementById('subtractFromBet').style.display='none';document.getElementById('addToBet').style.display='none';document.getElementById('hitMeButton').style.display='none';window.currentGame.playerDone();">
             Stay
         </button>
-        <button id="hitMeButton" onclick="document.getElementById('subtractFromBet').style.display='none';document.getElementById('addToBet').style.display='none';currentGame.player.hit(currentGame.deck);document.getElementById('currentCards').innerHTML = currentGame.player.html()">
+        <button id="hitMeButton" onclick="document.getElementById('subtractFromBet').style.display='none';document.getElementById('addToBet').style.display='none';window.currentGame.player.hit(window.currentGame.deck);document.getElementById('currentCards').innerHTML = window.currentGame.player.html()">
             Hit me
         </button>
-        <button style="display:none" id="newRound" onclick="currentGame.newRound()">
+        <button style="display:none" id="newRound" onclick="window.currentGame.newRound()">
             New Round
         </button>
     </div>
@@ -51,8 +51,8 @@ export const description = "Classic BlackJack with a twist. Bet on each hand, wi
 
     <div slot="settings">
         <fieldset>
-            <label for="acesHigh">Ace value</label>
-            <select name="acesHigh" id="acesHigh" onchange="if (this.value==='1'){acesHigh = true}else{acesHigh = false}">
+            <label for="window.acesHigh">Ace value</label>
+            <select name="window.acesHigh" id="window.acesHigh" onchange="if (this.value==='1'){window.acesHigh = true}else{window.acesHigh = false}">
                 <option value="0">Aces low (1)</option>
                 <option value="1" selected>Aces High (11)</option>
             </select>
@@ -63,14 +63,16 @@ export const description = "Classic BlackJack with a twist. Bet on each hand, wi
 
 <script is:inline>
 
-/**@type {BlackJack?} */
-let currentGame = null
+/**@type {BlackJack?} 
+ * @ts-ignore
+*/
+window.currentGame = null
 
-let acesHigh = true
+window.acesHigh = true
 
 class BlackJack{
     constructor(){
-        this.deck = new Deck(acesHigh)
+        this.deck = new Deck(window.acesHigh)
         this.player = new Player("Player", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
         this.dealer = new Player("Dealer", [this.deck.getRandomCard(true), this.deck.getRandomCard(true)])
         this.bet = 1;
@@ -154,15 +156,15 @@ class BlackJack{
         //@ts-ignore
         document.getElementById("winnings").innerHTML = ""
         //@ts-ignore
-        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)`
+        document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.bet > 1){window.currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.bet < 10){window.currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.bet;">+1</button> drink(s)`
         //@ts-ignore
         document.getElementById("stayButton").style.display = "block"
         //@ts-ignore
         document.getElementById("hitMeButton").style.display = "block"
         //@ts-ignore
-        document.getElementById("dealerCards").innerHTML = currentGame.dealer.html()
+        document.getElementById("dealerCards").innerHTML = window.currentGame.dealer.html()
         //@ts-ignore
-        document.getElementById("currentCards").innerHTML = currentGame.player.html()
+        document.getElementById("currentCards").innerHTML = window.currentGame.player.html()
 
     }
 }
@@ -194,9 +196,9 @@ class Player{
             //@ts-ignore
             document.getElementById("hitMeButton").style.display='none';
             //@ts-ignore
-            if (!currentGame.roundDone){
+            if (!window.currentGame.roundDone){
                 //@ts-ignore
-                currentGame.playerDone()
+                window.currentGame.playerDone()
             }
             
         }
@@ -213,7 +215,7 @@ class Player{
 
 function startGame(){
 
-    currentGame = new BlackJack()
+    window.currentGame = new BlackJack()
     // Cleanup old game items
     //@ts-ignore
     document.getElementById("endGameNotice").style.display = "none"
@@ -226,11 +228,11 @@ function startGame(){
     //@ts-ignore
     document.getElementById("gameContent").style.opacity = "1";
     //@ts-ignore
-    document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet > 1){currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.bet < 10){currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.bet;">+1</button> drink(s)`
+    document.getElementById("bet").innerHTML = `Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.bet > 1){window.currentGame.bet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.bet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.bet < 10){window.currentGame.bet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.bet;">+1</button> drink(s)`
     //@ts-ignore   
-    document.getElementById("dealerCards").innerHTML = currentGame.dealer.html()
+    document.getElementById("dealerCards").innerHTML = window.currentGame.dealer.html()
     //@ts-ignore
-    document.getElementById("currentCards").innerHTML = currentGame.player.html()
+    document.getElementById("currentCards").innerHTML = window.currentGame.player.html()
     //@ts-ignore
     document.getElementById("mainLogoContainer").style.top = "15vh"; 
 

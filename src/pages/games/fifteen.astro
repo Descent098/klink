@@ -16,11 +16,11 @@ export const description = "Roll dice to get to the goal number, win big or lose
 
     </div>
     <div id="bet">
-        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet <span 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)
+        Your current bet is: <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet <span 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)
     </div>
 
     <div id="controls">
-        <button onclick="currentGame.roll()">Roll Dice</button>
+        <button onclick="window.currentGame.roll()">Roll Dice</button>
     </div>
 
     <div slot="instructions">
@@ -39,8 +39,11 @@ export const description = "Roll dice to get to the goal number, win big or lose
     <script src="/js/dice.js" is:inline></script>
     <script is:inline>
 
-    /**@type {Fifteen?} */
-    let currentGame = null
+    /**
+     * @type {Fifteen?} 
+     * @ts-ignore
+    */
+    window.currentGame = null
 
     class Fifteen{
         constructor (goalNumber = 15){
@@ -59,7 +62,7 @@ export const description = "Roll dice to get to the goal number, win big or lose
             //@ts-ignore
             document.getElementById("diceTotal").innerHTML = `Total: <span class="drinks">${this.total}</span>`
             //@ts-ignore
-            document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button>`
+            document.getElementById("controls").innerHTML = `<button onclick="window.currentGame.roll()">Roll Dice</button>`
         }
 
         roll(){
@@ -77,7 +80,7 @@ export const description = "Roll dice to get to the goal number, win big or lose
             //@ts-ignore
             document.getElementById("diceTotal").innerHTML = `Total: <span class="drinks">${this.total}</span>`
             //@ts-ignore
-            document.getElementById("bet").innerHTML = `Your bet this round is (<span class="drinks">${betMultiplier}</span>x multiplier): <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+            document.getElementById("bet").innerHTML = `Your bet this round is (<span class="drinks">${betMultiplier}</span>x multiplier): <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)`
             //@ts-ignore
             document.getElementById("totalBet").innerHTML = `<h3>Current Total Bet: <span class="drinks">${this.totalBet}</span></h3>`
             
@@ -91,7 +94,7 @@ export const description = "Roll dice to get to the goal number, win big or lose
 
             console.log("HERE")
             //@ts-ignore
-            document.getElementById("controls").innerHTML = `<button onclick="currentGame.roll()">Roll Dice</button><button onclick="currentGame.finished()">Stop Rolling</button>`
+            document.getElementById("controls").innerHTML = `<button onclick="window.currentGame.roll()">Roll Dice</button><button onclick="window.currentGame.finished()">Stop Rolling</button>`
 
         }
 
@@ -158,8 +161,8 @@ export const description = "Roll dice to get to the goal number, win big or lose
     }
 
     function startGame(){
-
-        currentGame = new Fifteen()
+        //@ts-ignore
+        window.currentGame = new Fifteen()
         // Cleanup old game items
         //@ts-ignore
         document.getElementById("endGameNotice").style.display = "none"
@@ -176,7 +179,7 @@ export const description = "Roll dice to get to the goal number, win big or lose
         //@ts-ignore
         document.getElementById("gameContent").style.opacity = "1";
         //@ts-ignore
-        document.getElementById("bet").innerHTML = `Your current bet is (<span class="drinks">1</span>x multiplier): <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet > 1){currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (currentGame.currentBet < 10){currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = currentGame.currentBet;">+1</button> drink(s)`
+        document.getElementById("bet").innerHTML = `Your current bet is (<span class="drinks">1</span>x multiplier): <button id="subtractFromBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet > 1){window.currentGame.currentBet -=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet; ">-1</button> <span id="drinkBet" class="drinks">1</span> <button id="addToBet" style="display:inline;font-size:1rem;font-family:cursive; padding:.3rem;" onclick="if (window.currentGame.currentBet < 10){window.currentGame.currentBet +=1}; document.getElementById('drinkBet').innerHTML = window.currentGame.currentBet;">+1</button> drink(s)`
         //@ts-ignore
         document.getElementById("mainLogoContainer").style.top = "15vh"; 
 
