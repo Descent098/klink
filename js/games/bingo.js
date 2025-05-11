@@ -20,7 +20,7 @@ const ChallengeTypes = Object.freeze({
  * @type {Bingo?}
 */
  //@ts-ignore
-let currentGame = null;
+window.currentGame ??= null;
 
 /**
  * The Current Game settings
@@ -28,7 +28,7 @@ let currentGame = null;
  * @type {BingoSettings?}
 */
  //@ts-ignore
- let currentSettings = null;
+ window.currentSettings = null;
 
 /**
  * Gets a random integer
@@ -446,7 +446,8 @@ class Bingo{
         if (this.checkIfWon()){
             console.log("CHECKIGN IF WON")
             endGame(this.totalDrinks)
-            currentGame = null
+            //@ts-ignore
+            window.currentGame = null
         }
     }
 
@@ -513,10 +514,11 @@ function startGame(){
     const boardElement = document.getElementById("bingoBoard")
     boardElement.innerHTML = ""
     //@ts-ignore
-    currentGame = new Bingo(currentSettings)
+    window.currentGame = new Bingo(window.currentSettings)
     //@ts-ignore
     document.getElementById("gameContent").style.opacity = "1";
     //@ts-ignore
     document.getElementById("gameButtons").style.opacity = "1";
 }
-
+//@ts-ignore
+window.currentSettings = new BingoSettings("normal", 1, false)
