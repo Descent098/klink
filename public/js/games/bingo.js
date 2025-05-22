@@ -4,14 +4,15 @@
 
 /**
  * @typedef {"Blue"|"Red"|"Clear"|"Shot"|"Creamy"} ChallengeType
- * @type {{Blue: ChallengeType, Red: ChallengeType, Clear: ChallengeType, Shot: ChallengeType, Creamy: ChallengeType}}
+ * @type {{Blue: ChallengeType, Red: ChallengeType, Clear: ChallengeType, Shot: ChallengeType, Creamy: ChallengeType, Water:"Water"}}
  */
 const ChallengeTypes = Object.freeze({
     Blue: "Blue",
     Red: "Red",
     Clear: "Clear",
     Shot: "Shot",
-    Creamy: "Creamy"
+    Creamy: "Creamy",
+    Water:"Water"
   });
 
 /**
@@ -78,7 +79,7 @@ class Challenge{
          * @typedef {string} Label
          * @typedef {string} Description
          * @typedef {number} AmountOfDrinks
-         * @typedef {[Label, Description, AmountOfDrinks, ChallengeType]} ChallengeTuple
+         * @typedef {[Label, Description, AmountOfDrinks, ChallengeType|"Water"]} ChallengeTuple
          * @type {ChallengeTuple[]}
          */
         let challenges = [
@@ -113,9 +114,21 @@ class Challenge{
                 ChallengeTypes.Red
             ],
             [
+                "Fruity",
+                "Take <DRINK_AMOUNT> drink(s) of something red and fruity" , 
+                Math.floor(2* modifier), 
+                ChallengeTypes.Red
+            ],
+            [
                 "Clear and dangerout",
                 "Take <DRINK_AMOUNT> drink(s) of something clear" , 
                 Math.floor(2* modifier), 
+                ChallengeTypes.Clear
+            ],
+            [
+                "Kick",
+                "Take <DRINK_AMOUNT> drink(s) of something clear with a kick" , 
+                Math.floor(1* modifier), 
                 ChallengeTypes.Clear
             ],
             [
@@ -130,11 +143,31 @@ class Challenge{
                 Math.floor(1* modifier), 
                 ChallengeTypes.Shot
             ],
+            [
+                "Be Safe",
+                "Drink some water" , 
+                0, 
+                ChallengeTypes.Water
+            ],
+            [
+                "Be Safe",
+                "Drink some water" , 
+                0, 
+                ChallengeTypes.Water
+            ],
         ]
+
+
+        // Filter out the skipped challenges
+        const filteredChallenges = challenges.filter(challenge => {
+            const challengeType = challenge[3]; // index 3 holds the ChallengeType
+            //@ts-ignore
+            return !skippedChallenges.includes(challengeType);
+        });
 
         const randomIndex = Math.floor(Math.random() * challenges.length);
         //@ts-ignore
-        const randomChallenge = new Challenge(...challenges[randomIndex])
+        const randomChallenge = new Challenge(...filteredChallenges[randomIndex])
         return randomChallenge
     }
 }
